@@ -8,22 +8,51 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UserReader {
-    private String userName;
+    private final String userName;
 
     public UserReader(String userName) {
         this.userName = userName;
     }
 
     private String getUserConcertsFilePath() {
-        return System.getProperty("user.dir") + "/src/model/data/" + "concerts_" + this.userName + ".csv";
+        return System.getProperty("user.dir") + "/src/model/data/user_concerts/" + "concerts_" + this.userName + ".csv";
+    }
+
+    // 接頭辞からコンサート名を検索
+    public static ArrayList<ArrayList<String>> searchForConcerts(String prefix) {
+        ArrayList<ArrayList<String>> allConcerts = getAllConcerts();
+
+        String regex = "^" + prefix;
+        Pattern p = Pattern.compile(regex);
+
+        ArrayList<ArrayList<String>> retConcerts = new ArrayList<>();
+
+        for(var concert : allConcerts) {
+            // コンサート名取得
+            Matcher m = p.matcher(concert.get(0));
+
+            if(m.find()) {
+                retConcerts.add(concert);
+            }
+        }
+
+        return retConcerts;
     }
 
     public void updateMyConcerts(ArrayList<String> addedConcert) {
-        ArrayList<ArrayList<String>> mc = new ArrayList<>();
+        ArrayList<ArrayList<String>> mc = getMyConcerts();
 
-        mc = getMyConcerts();
+        // すでに登録してあるコンサートを追加しようとした場合は何も行わない
+        for (var c : mc) {
+            if (addedConcert.equals(c)) {
+                return;
+            }
+        }
+
         mc.add(addedConcert);
 
         BufferedWriter myConcertBuffer = null;
@@ -57,6 +86,10 @@ public class UserReader {
         }
     }
 
+    public void deleteMyConcert(int index) {
+        getMyConcerts().remove(index);
+    }
+
     public ArrayList<ArrayList<String>> getMyConcerts() {
         String fname = getUserConcertsFilePath();
         File f = new File(fname);
@@ -65,6 +98,7 @@ public class UserReader {
             try {
                 f.createNewFile();
             } catch (IOException e) {
+                System.out.println("ファイル読み込み失敗");
                 System.exit(1);
             }
 
