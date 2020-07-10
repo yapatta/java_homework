@@ -1,0 +1,21 @@
+package model;
+
+public class ConcertReader {
+	public ConcertReader() {
+		private static String concertsFileName = "concerts.csv";
+		private ArrayList<ArrayList<String>> concerts;
+		File concertsFile = new File(concertsFileName);
+		BufferedReader concertsBufferReader = new BufferedReader(new FileReader(concertsFile));
+		while ((tmpLine = concertsBufferReader.readLine()) != null) {
+			String[] tmp = tmpLine.split(",", 0);
+			ArrayList<String> concert = new ArrayList<>(Arrays.asList(tmp));
+			concerts.add(concert);
+		}
+
+		concertsBufferReader.close();
+	}
+
+	public ArrayList<ArrayList<String>> getConcerts() {
+		return this.concerts;
+	}
+}
