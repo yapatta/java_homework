@@ -1,7 +1,7 @@
-import mediator.ConcertBookingFrame;
+import mediator.LoginFrame;
 
 class Main {
     public static void main(String[] args) {
-        new ConcertBookingFrame("チケット予約サービス");
+        new LoginFrame("チケット予約サービス");
     }
 }

@@ -1,12 +1,11 @@
 package components;
 
-import mediator.*;
+import mediator.Mediator;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.TextEvent;
-import java.awt.event.TextListener;
 
-public class ColleagueTextField extends TextField implements TextListener, Colleague {
+public class ColleagueTextField extends JTextField implements Colleague {
     private Mediator mediator;
 
     public ColleagueTextField(String text, int columns) {
@@ -20,9 +19,5 @@ public class ColleagueTextField extends TextField implements TextListener, Colle
     public void setColleagueEnabled(boolean enabled) {
         setEnabled(enabled);
         setBackground(enabled ? Color.white : Color.lightGray);
-    }
-
-    public void textValueChanged(TextEvent e) {
-        mediator.colleagueChanged();
     }
 }

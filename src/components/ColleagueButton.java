@@ -2,9 +2,11 @@ package components;
 
 import mediator.Mediator;
 
-import java.awt.*;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class ColleagueButton extends Button implements Colleague {
+public class ColleagueButton extends JButton implements ActionListener, Colleague {
     private Mediator mediator;
 
     public ColleagueButton(String caption) {
@@ -17,5 +19,9 @@ public class ColleagueButton extends Button implements Colleague {
 
     public void setColleagueEnabled(boolean enabled) {
         setEnabled(enabled);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        mediator.colleagueChanged();
     }
 }
