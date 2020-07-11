@@ -1,6 +1,6 @@
 package components;
 
-import mediator.Mediator;
+import controller.Mediator;
 
 public interface Colleague {
     public abstract void setMediator(Mediator mediator);
