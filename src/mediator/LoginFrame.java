@@ -18,24 +18,24 @@ public class LoginFrame extends JFrame implements ActionListener, Mediator {
         super(title);
 
         setSize(400, 600);
-        // 真ん中に位置
+        // Position Center
         setLocationRelativeTo(null);
-        // 閉じるボタンでアプリケーション終了
+        // Finish the application when quit button is pushed
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setLayout(new FlowLayout());
 
         createColleagues();
 
-        // スペース用JPanel
+        // JPanel for Main Message
         JPanel spacePanel = new JPanel();
         spacePanel.setLayout(new BorderLayout());
-        JLabel subject = new JLabel("めっちゃ使いやすい" + title);
+        JLabel subject = new JLabel("Very Useful" + title.substring(0, 1).toUpperCase() + title.substring(1).toLowerCase());
         subject.setFont(new Font("Arial", Font.PLAIN, 20));
         spacePanel.add(subject);
         spacePanel.add(Box.createVerticalStrut(50), BorderLayout.SOUTH);
 
-        // 文字入力用JPanel
+        // JPanel for Input
         JPanel inputPanel = new JPanel();
         inputPanel.setPreferredSize(new Dimension(300, 100));
 
@@ -43,12 +43,12 @@ public class LoginFrame extends JFrame implements ActionListener, Mediator {
         inputLayout.setHgap(10);
         inputPanel.setLayout(inputLayout);
 
-        inputPanel.add(new JLabel("氏名:"));
+        inputPanel.add(new JLabel("Name:"));
         inputPanel.add(textUser);
-        inputPanel.add(new JLabel("会員ID:"));
+        inputPanel.add(new JLabel("Member ID:"));
         inputPanel.add(textUserId);
 
-        // OKボタン用JPanel
+        // JPanel for OK Button
         JPanel submitPanel = new JPanel();
         submitPanel.setPreferredSize(new Dimension(300, 50));
 
@@ -67,7 +67,7 @@ public class LoginFrame extends JFrame implements ActionListener, Mediator {
 
         textUser = new ColleagueTextField("", 10);
         textUserId = new ColleagueTextField("", 10);
-        buttonOk = new ColleagueButton("ログイン");
+        buttonOk = new ColleagueButton("Login");
 
         textUser.setMediator(this);
         textUserId.setMediator(this);
@@ -77,11 +77,11 @@ public class LoginFrame extends JFrame implements ActionListener, Mediator {
     }
 
     public void colleagueChanged() {
-        // ログイン
+        // Login
         if (UserReader.isCorrectUser(textUser.getText(), textUserId.getText())) {
-            JOptionPane.showMessageDialog(this, "ログイン成功", "Info", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Success", "Info", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(this, "ログイン失敗", "Warn", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Failure", "Warn", JOptionPane.WARNING_MESSAGE);
         }
     }
 

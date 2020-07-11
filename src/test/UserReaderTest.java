@@ -11,9 +11,25 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class UserReaderTest {
     @org.junit.jupiter.api.Test
     void updateMyConcerts() {
-        ArrayList<String> newConcert = new ArrayList<String>(Arrays.asList("マジカルミライ2020", "ボーカロイド", "2020/08/10", "幕張メッセ", "5600円", "100人"));
+        ArrayList<String> newConcert = new ArrayList<String>(Arrays.asList("Magical Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100"));
         UserReader ur = new UserReader("yyahata");
         ur.updateMyConcerts(newConcert);
+    }
+
+    @org.junit.jupiter.api.Test
+    void searchForConcerts() {
+        var c = UserReader.searchForConcerts("Magical");
+
+        ArrayList<ArrayList<String>> expected = new ArrayList<>();
+        expected.add(new ArrayList<String>(Arrays.asList("Magical Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100")));
+
+        assertEquals(expected, c);
+
+        c = UserReader.searchForConcerts("aiueo");
+
+        expected = new ArrayList<>();
+
+        assertEquals(expected, c);
     }
 
     @org.junit.jupiter.api.Test
@@ -21,9 +37,15 @@ class UserReaderTest {
         UserReader ur = new UserReader("yyahata");
 
         ArrayList<ArrayList<String>> expected = new ArrayList<>();
-        expected.add(new ArrayList<String>(Arrays.asList("マジカルミライ2020", "ボーカロイド", "2020/08/10", "幕張メッセ", "5600円", "100人")));
+        expected.add(new ArrayList<String>(Arrays.asList("Magical Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100")));
 
         assertEquals(expected, ur.getMyConcerts());
+    }
+
+    @org.junit.jupiter.api.Test
+    void deleteMyConcert() {
+        UserReader ur = new UserReader("yyahata");
+        ur.deleteMyConcert(0);
     }
 
     @org.junit.jupiter.api.Test

@@ -22,7 +22,14 @@ public class UserReader {
         return System.getProperty("user.dir") + "/src/model/data/user_concerts/" + "concerts_" + this.userName + ".csv";
     }
 
-    // 接頭辞からコンサート名を検索
+    // Search for specific subscribers with a concert name
+    public static ArrayList<ArrayList<String>> getSpecificConcerts(String concertName) {
+        ArrayList<ArrayList<String>> users = new ArrayList<>();
+        // FIXME: not yet implemented
+        return users;
+    }
+
+    // search for concert name with prefix
     public static ArrayList<ArrayList<String>> searchForConcerts(String prefix) {
         ArrayList<ArrayList<String>> allConcerts = getAllConcerts();
 
@@ -31,11 +38,10 @@ public class UserReader {
 
         ArrayList<ArrayList<String>> retConcerts = new ArrayList<>();
 
-        for(var concert : allConcerts) {
-            // コンサート名取得
+        for (var concert : allConcerts) {
             Matcher m = p.matcher(concert.get(0));
 
-            if(m.find()) {
+            if (m.find()) {
                 retConcerts.add(concert);
             }
         }
@@ -46,7 +52,7 @@ public class UserReader {
     public void updateMyConcerts(ArrayList<String> addedConcert) {
         ArrayList<ArrayList<String>> mc = getMyConcerts();
 
-        // すでに登録してあるコンサートを追加しようとした場合は何も行わない
+        // do nothing when the name was already added
         for (var c : mc) {
             if (addedConcert.equals(c)) {
                 return;
@@ -55,7 +61,13 @@ public class UserReader {
 
         mc.add(addedConcert);
 
+        writeMyConcerts(mc);
+    }
+
+    public void writeMyConcerts(ArrayList<ArrayList<String>> mc) {
+
         BufferedWriter myConcertBuffer = null;
+
         try {
             myConcertBuffer = Files.newBufferedWriter(Paths.get(getUserConcertsFilePath()), Charset.defaultCharset());
         } catch (IOException e) {
@@ -87,7 +99,10 @@ public class UserReader {
     }
 
     public void deleteMyConcert(int index) {
-        getMyConcerts().remove(index);
+        ArrayList<ArrayList<String>> mc = getMyConcerts();
+        mc.remove(index);
+
+        writeMyConcerts(mc);
     }
 
     public ArrayList<ArrayList<String>> getMyConcerts() {
@@ -98,7 +113,7 @@ public class UserReader {
             try {
                 f.createNewFile();
             } catch (IOException e) {
-                System.out.println("ファイル読み込み失敗");
+                System.out.println("Failed to read a file");
                 System.exit(1);
             }
 
@@ -162,7 +177,7 @@ public class UserReader {
         try {
             rows = Files.readAllLines(Paths.get(getFileNamePath("users.csv")), Charset.defaultCharset());
         } catch (IOException e) {
-            System.out.println("ファイル読み込み失敗");
+            System.out.println("Failed to read a file");
             System.exit(1);
         }
 
@@ -183,7 +198,7 @@ public class UserReader {
         try {
             rows = Files.readAllLines(Paths.get(getFileNamePath("concerts.csv")), Charset.defaultCharset());
         } catch (IOException e) {
-            System.out.println("ファイル読み込み失敗");
+            System.out.println("Failed to read a file");
             System.exit(1);
         }
 
