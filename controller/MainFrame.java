@@ -14,11 +14,13 @@ public class MainFrame extends JFrame implements Mediator {
 
     public MainFrame() {
         this.add(loginPanel);
-        loginPanel.setVisible(true);
+        loginPanel.setVisible(false);
 
         // FIXME: add other frames for concerts and user concerts.
         // ex this.add(concertPanel);
         // concertPanel.setVisible(false);
+        this.add(concertsPanel);
+        concertsPanel.setVisible(true);
 
         // FIXME: modify accordingly
         setSize(800, 1000);
