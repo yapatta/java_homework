@@ -100,7 +100,7 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
 
     }
 
-    public JSeparator getHr(int width, int hight) {
+    public static JSeparator getHr(int width, int hight) {
         JSeparator sp = new JSeparator(JSeparator.HORIZONTAL);
         sp.setPreferredSize(new Dimension(width, hight));
         return sp;
