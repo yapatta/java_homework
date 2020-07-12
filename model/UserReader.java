@@ -174,6 +174,7 @@ public class UserReader {
         try {
             rows = Files.readAllLines(Paths.get(getFileNamePath("concerts.csv")), Charset.defaultCharset());
         } catch (IOException e) {
+            System.err.println(e.getMessage());
             System.out.println("Failed to read a file");
             System.exit(1);
         }
