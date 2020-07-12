@@ -25,19 +25,16 @@ public class MainFrame extends JFrame implements Mediator {
         this.createColleagues();
 
         this.add(loginPanel);
-        loginPanel.setVisible(true);
-        // loginPanel.setVisible(false); //for Test. default is true
+        loginPanel.setVisible(true); // default is true
 
         this.add(concertsPanel);
-        concertsPanel.setVisible(false);
-        // concertsPanel.setVisible(true); //for Test. default is false
+        concertsPanel.setVisible(false); // default is false
 
         this.add(myConcertsPanel);
         myConcertsPanel.setVisible(false);
 
         // Start with Login Panel
         this.setSize(LoginPanel.ALL_PANEL_WIDTH, LoginPanel.PANEL_HEIGHT);
-        // this.setSize(ConcertsPanel.ALL_PANEL_WIDTH,ConcertsPanel.PANEL_HEIGHT); //for Test.default is upper.
     }
 
     public void showLoginPanel() {

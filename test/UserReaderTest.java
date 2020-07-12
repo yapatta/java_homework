@@ -14,14 +14,14 @@ class UserReaderTest {
         var ucs = UserReader.getUserConcerts("shatanaka");
 
         ArrayList<ArrayList<String>> expected = new ArrayList<>();
-        expected.add(new ArrayList<String>(Arrays.asList("Magical Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100")));
+        expected.add(new ArrayList<String>(Arrays.asList("false", "Magical Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100")));
 
         assertEquals(expected, ucs);
     }
 
     @org.junit.jupiter.api.Test
     void updateMyConcerts() {
-        ArrayList<String> newConcert = new ArrayList<String>(Arrays.asList("Magical Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100"));
+        ArrayList<String> newConcert = new ArrayList<String>(Arrays.asList("false", "Magical Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100"));
         UserReader ur = new UserReader("yyahata");
         ur.updateMyConcerts(newConcert);
     }
@@ -31,7 +31,7 @@ class UserReaderTest {
         UserReader ur = new UserReader("shatanaka");
 
         ArrayList<ArrayList<String>> expected = new ArrayList<>();
-        expected.add(new ArrayList<String>(Arrays.asList("Magical Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100")));
+        expected.add(new ArrayList<String>(Arrays.asList("false", "Magical Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100")));
 
         assertEquals(expected, ur.getMyConcerts());
     }
@@ -78,7 +78,7 @@ class UserReaderTest {
     ArrayList<ArrayList<String>> getExpectedConcerts() {
         ArrayList<ArrayList<String>> expected = new ArrayList<>();
 
-        expected.add(new ArrayList<>(Arrays.asList("Magical Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100")));
+        expected.add(new ArrayList<>(Arrays.asList("false", "Magical Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100")));
 
         return expected;
     }
@@ -98,7 +98,7 @@ class UserReaderTest {
         var c = UserReader.searchForConcerts("Magical");
 
         ArrayList<ArrayList<String>> expected = new ArrayList<>();
-        expected.add(new ArrayList<String>(Arrays.asList("Magical Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100")));
+        expected.add(new ArrayList<String>(Arrays.asList("false", "Magical Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100")));
 
         assertEquals(expected, c);
 

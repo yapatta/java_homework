@@ -1,7 +1,6 @@
 package controller;
 
 import components.ColleagueButton;
-import components.ConcertColumnLabel;
 import lib.GUILibrary;
 import model.UserReader;
 
@@ -13,18 +12,18 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Vector;
+
 @SuppressWarnings("serial")
 public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
     public static int ALL_PANEL_WIDTH = 900;
     public static int PANEL_WIDTH = 800;
     public static int PANEL_HEIGHT = 1000;
+    public static String[] COLUMN_NAMES = {"Register", "Title", "Genre", "Day", "Place", "Fee", "Capacity"};
 
     private ColleagueButton buttonRegister;
     private ColleagueButton buttonMyConcerts;
     private ColleagueButton buttonLogout;
-    private DefaultListModel<String> listModel;
-    private JList<String> list;
+    private JTable concertsTable = new JTable();
     private final MainFrame mainFrame;
 
     public ConcertsPanel(MainFrame mf, String title) {
@@ -47,69 +46,20 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
         subject.setFont(new Font("Arial", Font.PLAIN, 30));
         labelPanel.add(subject);
 
-        // JPanel for category
-        /*
-        JPanel categoryPanel = new JPanel();
-        categoryPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 500));
-
-        categoryPanel.add(new ConcertColumnLabel("Register"));
-        categoryPanel.add(new ConcertColumnLabel("Title"));
-        categoryPanel.add(new ConcertColumnLabel("Genre"));
-        categoryPanel.add(new ConcertColumnLabel("Day"));
-        categoryPanel.add(new ConcertColumnLabel("Place"));
-        categoryPanel.add(new ConcertColumnLabel("Fee"));
-        categoryPanel.add(new ConcertColumnLabel("Capacity"));
-
-
-        //Concert List
-        listModel = new DefaultListModel<String>();
-        var allConcerts = UserReader.getAllConcerts();
-        for(var concert : allConcerts){
-            String detail = "";
-            for(var str : concert){
-                detail += str + " ";
-            }
-            listModel.addElement(detail);
-        }
-        list = new JList<String>(listModel);
-        list.setVisibleRowCount(10);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        JScrollPane scrollPanel = new JScrollPane(list);
-        scrollPanel.createVerticalScrollBar();
-        scrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 100));
-        */
-
-        //Concert Table
-        String[] columnNames = {"Register","Title","Genre","Day","Place","Fee","Capacity"};
-        /*Test Data*/
-        Object[][] data = new Object[][]{{false, "Magicl Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100"}};
-        JTable table = new JTable();
-        DefaultTableModel modeltable = new DefaultTableModel(columnNames,0){
-
-            public Class<?> getColumnClass(int columnIndex){
-                switch(columnIndex){
-                    case 0: return Boolean.class;
-                    default:
-                        return super.getColumnClass(columnIndex);
-                }
-            }
-        };
+        // format of table
         /*add All data for each row*/
-        modeltable.addRow(data[0]); //Test data push
         /*format string in center*/
-        table.setModel(modeltable);
-        DefaultTableCellRenderer tableCellRenderer= new DefaultTableCellRenderer();
+        DefaultTableCellRenderer tableCellRenderer = new DefaultTableCellRenderer();
         tableCellRenderer.setHorizontalAlignment(JLabel.CENTER);
-        for(int i=1;i<7;i++) {
-            TableColumn col = table.getColumnModel().getColumn(i);
+
+        for (int i = 1; i < 7; i++) {
+            TableColumn col = concertsTable.getColumnModel().getColumn(i);
             col.setCellRenderer(tableCellRenderer);
         }
 
         /*set scroll*/
-        JScrollPane scrollTable = new JScrollPane(table);
-        scrollTable.setPreferredSize(new Dimension(PANEL_WIDTH,500));
-
+        JScrollPane scrollTable = new JScrollPane(concertsTable);
+        scrollTable.setPreferredSize(new Dimension(PANEL_WIDTH, 500));
 
 
         //register and logoutButton
@@ -138,7 +88,25 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
         var allConcerts = UserReader.getAllConcerts();
         var myConcerts = this.mainFrame.getUserReader().getMyConcerts();
 
-        // FIXME: add view initializer later
+        //Concert Table
+        Object[][] allConcertsObject = UserReader.getAllConcertsAsObject();
+
+        DefaultTableModel modeltable = new DefaultTableModel(COLUMN_NAMES, 0) {
+
+            public Class<?> getColumnClass(int columnIndex) {
+                switch (columnIndex) {
+                    case 0:
+                        return Boolean.class;
+                    default:
+                        return super.getColumnClass(columnIndex);
+                }
+            }
+        };
+
+        for (var concertObject : allConcertsObject) {
+            modeltable.addRow(concertObject); //Test data push
+            concertsTable.setModel(modeltable);
+        }
     }
 
     /*set gui*/
@@ -146,6 +114,26 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
         buttonRegister = new ColleagueButton("Register");
         buttonMyConcerts = new ColleagueButton("Show My Concerts");
         buttonLogout = new ColleagueButton("Logout");
+
+        //Concert Table
+        Object[][] allConcertsObject = UserReader.getAllConcertsAsObject();
+
+        DefaultTableModel modeltable = new DefaultTableModel(COLUMN_NAMES, 0) {
+
+            public Class<?> getColumnClass(int columnIndex) {
+                switch (columnIndex) {
+                    case 0:
+                        return Boolean.class;
+                    default:
+                        return super.getColumnClass(columnIndex);
+                }
+            }
+        };
+
+        for (var concertObject : allConcertsObject) {
+            modeltable.addRow(concertObject); //Test data push
+            concertsTable.setModel(modeltable);
+        }
 
         buttonRegister.setMediator(this);
         buttonMyConcerts.setMediator(this);

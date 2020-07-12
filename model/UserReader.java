@@ -13,9 +13,26 @@ import java.util.regex.Pattern;
 
 public class UserReader {
     private final String userName;
+    public static int NAME_INDEX = 1;
 
     public UserReader(String userName) {
         this.userName = userName;
+    }
+
+    public static Object[][] getAllConcertsAsObject() {
+        ArrayList<ArrayList<String>> allConcerts = getAllConcerts();
+        Object[][] retConcerts = new Object[allConcerts.size()][7];
+
+        for (int i = 0; i < allConcerts.size(); i++) {
+            for (int j = 0; j < allConcerts.get(i).size(); j++) {
+                if (j == 0) {
+                    retConcerts[i][j] = allConcerts.get(i).get(j).equals("true");
+                } else {
+                    retConcerts[i][j] = allConcerts.get(i).get(j);
+                }
+            }
+        }
+        return retConcerts;
     }
 
     public String getUserName() {
@@ -230,12 +247,12 @@ public class UserReader {
         ArrayList<ArrayList<String>> retUsers = new ArrayList<>();
 
         for (ArrayList<String> user : allUsers) {
-            String uname = user.get(0);
+            String uname = user.get(NAME_INDEX);
 
             var concerts = getUserConcerts(uname);
 
             for (ArrayList<String> concert : concerts) {
-                if (concertName.equals(concert.get(0))) {
+                if (concertName.equals(concert.get(NAME_INDEX))) {
                     retUsers.add(user);
                     break;
                 }
@@ -255,7 +272,7 @@ public class UserReader {
         ArrayList<ArrayList<String>> retConcerts = new ArrayList<>();
 
         for (var concert : allConcerts) {
-            Matcher m = p.matcher(concert.get(0));
+            Matcher m = p.matcher(concert.get(NAME_INDEX));
 
             if (m.find()) {
                 retConcerts.add(concert);
