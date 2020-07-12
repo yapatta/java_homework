@@ -19,7 +19,7 @@ public class UserReader {
     }
 
     private String getUserConcertsFilePath() {
-        return System.getProperty("user.dir") + "/src/model/data/user_concerts/" + "concerts_" + this.userName + ".csv";
+        return System.getProperty("user.dir") + "/model/data/user_concerts/" + "concerts_" + this.userName + ".csv";
     }
 
     public void updateMyConcerts(ArrayList<String> addedConcert) {
@@ -128,11 +128,11 @@ public class UserReader {
     }
 
     private static String getUserConcertsFilePath(String userName) {
-        return System.getProperty("user.dir") + "/src/model/data/user_concerts/" + "concerts_" + userName + ".csv";
+        return System.getProperty("user.dir") + "/model/data/user_concerts/" + "concerts_" + userName + ".csv";
     }
 
     private static String getFileNamePath(String fileName) {
-        return System.getProperty("user.dir") + "/src/model/data/" + fileName;
+        return System.getProperty("user.dir") + "/model/data/" + fileName;
     }
 
     public static boolean isCorrectUser(String userName, String password) {
