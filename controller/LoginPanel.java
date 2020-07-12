@@ -2,6 +2,7 @@ package controller;
 
 import components.ColleagueButton;
 import components.ColleagueTextField;
+import lib.GUILibrary;
 import model.UserReader;
 
 import javax.swing.*;
@@ -10,17 +11,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginPanel extends JPanel implements ActionListener, Mediator {
+    public static int ALL_PANEL_WIDTH = 400;
+    public static int WIDTH = 300;
+    public static int PANEL_HEIGHT = 600;
+
     private ColleagueTextField textUser;
     private ColleagueTextField textUserId;
     private ColleagueButton buttonOk;
     private MainFrame mainFrame;
-    private String userName;
 
     public LoginPanel(MainFrame mf, String title) {
         this.mainFrame = mf;
         this.setName(title);
 
-        this.setSize(400, 600);
+        this.setSize(ALL_PANEL_WIDTH, PANEL_HEIGHT);
 
         this.setLayout(new FlowLayout());
 
@@ -29,7 +33,7 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
         // JPanel for Main Message
         JPanel spacePanel = new JPanel();
         spacePanel.setLayout(new GridLayout(1, 1));
-        spacePanel.setPreferredSize(new Dimension(300, 100));
+        spacePanel.setPreferredSize(new Dimension(WIDTH, 100));
         JLabel subject = new JLabel(title.substring(0, 1).toUpperCase() + title.substring(1).toLowerCase());
         subject.setHorizontalAlignment(JLabel.CENTER);
         subject.setFont(new Font("Arial", Font.PLAIN, 30));
@@ -37,7 +41,7 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
 
         // JPanel for Input
         JPanel inputPanel = new JPanel();
-        inputPanel.setPreferredSize(new Dimension(300, 100));
+        inputPanel.setPreferredSize(new Dimension(WIDTH, 100));
 
         GridLayout inputLayout = new GridLayout(3, 2);
         inputLayout.setHgap(10);
@@ -50,13 +54,15 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
 
         // JPanel for OK Button
         JPanel submitPanel = new JPanel();
-        submitPanel.setPreferredSize(new Dimension(300, 50));
+        submitPanel.setPreferredSize(new Dimension(WIDTH, 50));
 
         submitPanel.setLayout(new GridLayout(1, 1));
         submitPanel.add(buttonOk);
 
         this.add(spacePanel);
+        this.add(GUILibrary.getHr(WIDTH, 0));
         this.add(inputPanel);
+        this.add(GUILibrary.getHr(WIDTH, 0));
         this.add(submitPanel);
     }
 

@@ -6,6 +6,8 @@ public class MainFrame extends JFrame implements Mediator {
     public static String LoginPanelName = "Login";
     public static String ConcertsPanelName = "Concerts";
     public static String MyConcertsPanelName = "MyConcerts";
+    public static int WIDTH = 900;
+    public static int HEIGHT = 1000;
 
     // make several panels
     LoginPanel loginPanel;
@@ -28,18 +30,23 @@ public class MainFrame extends JFrame implements Mediator {
         myConcertsPanel.setVisible(false);
 
         // FIXME: modify accordingly
-        // this is the size of main panel
-        this.setSize(800, 1000);
+        this.setSize(LoginPanel.ALL_PANEL_WIDTH, LoginPanel.PANEL_HEIGHT);
     }
 
     public void showLoginPanel() {
         this.setAllVisibleFalse();
+
+        this.setSize(LoginPanel.ALL_PANEL_WIDTH, LoginPanel.PANEL_HEIGHT);
+        this.setLocationRelativeTo(null);
 
         this.loginPanel.setVisible(true);
     }
 
     public void showConcertsPanel() {
         this.setAllVisibleFalse();
+
+        this.setSize(ConcertsPanel.ALL_PANEL_WIDTH, ConcertsPanel.PANEL_HEIGHT);
+        this.setLocationRelativeTo(null);
 
         this.concertsPanel.initialize();
 
@@ -48,6 +55,9 @@ public class MainFrame extends JFrame implements Mediator {
 
     public void showMyConcertsPanel(String userName) {
         this.setAllVisibleFalse();
+
+        this.setSize(ConcertsPanel.ALL_PANEL_WIDTH, ConcertsPanel.PANEL_HEIGHT);
+        this.setLocationRelativeTo(null);
 
         this.myConcertsPanel.initialize(userName);
 
