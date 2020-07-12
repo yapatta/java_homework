@@ -19,6 +19,8 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
     private ArrayList<ArrayList<String>> concerts = new ArrayList<>();
     private ColleagueButton buttonRegister;
     private ColleagueButton buttonLogout;
+    private DefaultListModel<String> listModel;
+    private JList<String> list;
     private MainFrame mainFrame;
 
     public ConcertsPanel(MainFrame mf, String title) {
@@ -36,13 +38,13 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
         labelPanel.setLayout(new GridLayout(1, 1));
         labelPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 100));
         JLabel subject = new JLabel(title.substring(0, 1).toUpperCase() + title.substring(1).toLowerCase());
+
         subject.setHorizontalAlignment(JLabel.CENTER);
         subject.setFont(new Font("Arial", Font.PLAIN, 30));
         labelPanel.add(subject);
 
         // JPanel for category
         JPanel categoryPanel = new JPanel();
-
         categoryPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 100));
 
         categoryPanel.add(new ConcertColumnLabel("Register"));
@@ -52,6 +54,25 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
         categoryPanel.add(new ConcertColumnLabel("Artist"));
         categoryPanel.add(new ConcertColumnLabel("Fee"));
         categoryPanel.add(new ConcertColumnLabel("Capacity"));
+
+        //Concert List
+        listModel = new DefaultListModel<String>();
+        var allConcerts = UserReader.getAllConcerts();
+        for(var concert : allConcerts){
+            String detail = "";
+            for(var str : concert){
+                detail += str + " ";
+            }
+            listModel.addElement(detail);
+        }
+
+        list = new JList<String>(listModel);
+        list.setVisibleRowCount(10);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollPanel = new JScrollPane(list);
+        scrollPanel.createVerticalScrollBar();
+        scrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
 
         //register and logoutButton
         JPanel clickPanel = new JPanel();
@@ -66,6 +87,8 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
         this.add(labelPanel);
         add(GUILibrary.getHr(800, 0));
         this.add(categoryPanel, BorderLayout.CENTER);
+        add(GUILibrary.getHr(800, 0));
+        this.add(scrollPanel);
         add(GUILibrary.getHr(800, 0));
         this.add(clickPanel);
     }
