@@ -67,7 +67,7 @@ class UserReaderTest {
     }
 
     @org.junit.jupiter.api.Test
-    void getAllConcerts(){
+    void getAllConcerts() {
         ArrayList<ArrayList<String>> concerts = UserReader.getAllConcerts();
 
         ArrayList<ArrayList<String>> expected = getExpectedConcerts();
@@ -75,13 +75,12 @@ class UserReaderTest {
         assertEquals(expected, concerts);
     }
 
-    ArrayList<ArrayList<String>> getExpectedConcerts(){
+    ArrayList<ArrayList<String>> getExpectedConcerts() {
         ArrayList<ArrayList<String>> expected = new ArrayList<>();
 
-        expected.add(new ArrayList<>(Arrays.asList("Magical Mirai 2020","Vocaloid","2020/08/10","Makuhari Messe","5600","100")));
+        expected.add(new ArrayList<>(Arrays.asList("Magical Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100")));
 
         return expected;
-
     }
 
     @org.junit.jupiter.api.Test
