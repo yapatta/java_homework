@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 
 public class ColleagueButton extends JButton implements ActionListener, Colleague {
     private Mediator mediator;
+    private boolean action = false;
 
     public ColleagueButton(String caption) {
         super(caption);
@@ -22,6 +23,20 @@ public class ColleagueButton extends JButton implements ActionListener, Colleagu
     }
 
     public void actionPerformed(ActionEvent e) {
+        this.setAction();
         mediator.colleagueChanged();
+        this.unsetAction();
+    }
+
+    public void setAction() {
+        this.action = true;
+    }
+
+    public void unsetAction() {
+        this.action = false;
+    }
+
+    public boolean nowAction() {
+        return this.action;
     }
 }

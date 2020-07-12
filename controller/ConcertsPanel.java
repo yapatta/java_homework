@@ -16,10 +16,10 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
     public static int PANEL_WIDTH = 800;
     public static int PANEL_HEIGHT = 1000;
 
-    private ArrayList<ArrayList<String>> concerts = new ArrayList<>();
     private ColleagueButton buttonRegister;
+    private ColleagueButton buttonMyConcerts;
     private ColleagueButton buttonLogout;
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     public ConcertsPanel(MainFrame mf, String title) {
         this.mainFrame = mf;
@@ -60,6 +60,7 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
 
         clickPanel.setLayout(new GridLayout(1, 1));
         clickPanel.add(buttonRegister);
+        clickPanel.add(buttonMyConcerts);
         clickPanel.add(buttonLogout);
 
 
@@ -70,31 +71,49 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
         this.add(clickPanel);
     }
 
-    private void setConcerts(ArrayList<ArrayList<String>> concerts) {
-        this.concerts = concerts;
-    }
-
     /*if change view then start initialize*/
     public void initialize() {
-        this.setConcerts(UserReader.getAllConcerts());
+        var allConcerts = UserReader.getAllConcerts();
+        var myConcerts = this.mainFrame.getUserReader().getMyConcerts();
+
         // FIXME: add view initializer later
     }
 
     /*set gui*/
     public void createColleagues() {
         buttonRegister = new ColleagueButton("Register");
+        buttonMyConcerts = new ColleagueButton("Show My Concerts");
         buttonLogout = new ColleagueButton("Logout");
 
         buttonRegister.setMediator(this);
+        buttonMyConcerts.setMediator(this);
         buttonLogout.setMediator(this);
 
         buttonRegister.addActionListener(buttonRegister);
+        buttonMyConcerts.addActionListener(buttonMyConcerts);
         buttonLogout.addActionListener(buttonLogout);
     }
 
     /*change status*/
     public void colleagueChanged() {
+        if (this.buttonRegister.nowAction()) {
+            // FIXME: should add checked concerts to myConcerts
+            ArrayList<ArrayList<String>> addedConcerts = new ArrayList<>();
 
+            /*
+            for (var addedConcert : addedConcerts) {
+                this.mainFrame.getUserReader().updateMyConcerts(addedConcert);
+            }
+             */
+
+            this.mainFrame.setNextPanelName(MainFrame.MyConcertsPanelName);
+        } else if (this.buttonMyConcerts.nowAction()) {
+            this.mainFrame.setNextPanelName(MainFrame.MyConcertsPanelName);
+        } else if (this.buttonLogout.nowAction()) {
+            this.mainFrame.setNextPanelName(MainFrame.LoginPanelName);
+        }
+
+        this.mainFrame.colleagueChanged();
     }
 
     /*Button action*/

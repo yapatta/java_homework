@@ -1,5 +1,7 @@
 package controller;
 
+import model.UserReader;
+
 import javax.swing.*;
 
 public class MainFrame extends JFrame implements Mediator {
@@ -14,8 +16,9 @@ public class MainFrame extends JFrame implements Mediator {
     ConcertsPanel concertsPanel;
     MyConcertsPanel myConcertsPanel;
 
-    private String userName = "";
+    private UserReader ur;
     private String nextPanelName = "";
+
 
     public MainFrame() {
         this.createColleagues();
@@ -29,8 +32,9 @@ public class MainFrame extends JFrame implements Mediator {
         this.add(myConcertsPanel);
         myConcertsPanel.setVisible(false);
 
-        // FIXME: modify accordingly
+        // Start with Login Panel
         this.setSize(LoginPanel.ALL_PANEL_WIDTH, LoginPanel.PANEL_HEIGHT);
+        // this.setSize(ConcertsPanel.ALL_PANEL_WIDTH, ConcertsPanel.PANEL_HEIGHT);
     }
 
     public void showLoginPanel() {
@@ -53,13 +57,13 @@ public class MainFrame extends JFrame implements Mediator {
         this.concertsPanel.setVisible(true);
     }
 
-    public void showMyConcertsPanel(String userName) {
+    public void showMyConcertsPanel() {
         this.setAllVisibleFalse();
 
         this.setSize(ConcertsPanel.ALL_PANEL_WIDTH, ConcertsPanel.PANEL_HEIGHT);
         this.setLocationRelativeTo(null);
 
-        this.myConcertsPanel.initialize(userName);
+        this.myConcertsPanel.initialize();
 
         this.myConcertsPanel.setVisible(true);
     }
@@ -79,10 +83,9 @@ public class MainFrame extends JFrame implements Mediator {
     public void colleagueChanged() {
         // 渡された値を元に, Viewを変更
         // Login後MyConcertsに移行
-        if (this.getNextPanelName().equals(MyConcertsPanelName)) {
-            String userName = this.getUserName();
 
-            this.showMyConcertsPanel(userName);
+        if (this.getNextPanelName().equals(MyConcertsPanelName)) {
+            this.showMyConcertsPanel();
         } else if (this.getNextPanelName().equals(ConcertsPanelName)) {
             this.showConcertsPanel();
         } else if (this.getNextPanelName().equals(LoginPanelName)) {
@@ -94,12 +97,12 @@ public class MainFrame extends JFrame implements Mediator {
         }
     }
 
-    public void setUserName(String un) {
-        this.userName = un;
+    public void setUserReader(String userName) {
+        this.ur = new UserReader(userName);
     }
 
-    public String getUserName() {
-        return this.userName;
+    public UserReader getUserReader() {
+        return this.ur;
     }
 
     public void setNextPanelName(String npn) {

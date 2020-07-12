@@ -82,7 +82,7 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
     public void colleagueChanged() {
         // Login
         if (UserReader.isCorrectUser(textUser.getText(), textUserId.getText())) {
-            this.mainFrame.setUserName(textUser.getText());
+            this.mainFrame.setUserReader(textUser.getText());
             this.mainFrame.setNextPanelName(MainFrame.MyConcertsPanelName);
             this.mainFrame.colleagueChanged();
         } else {

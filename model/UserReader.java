@@ -18,6 +18,10 @@ public class UserReader {
         this.userName = userName;
     }
 
+    public String getUserName() {
+        return this.userName;
+    }
+
     private String getUserConcertsFilePath() {
         return System.getProperty("user.dir") + "/model/data/user_concerts/" + "concerts_" + this.userName + ".csv";
     }
