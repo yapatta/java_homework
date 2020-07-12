@@ -4,6 +4,7 @@ import model.UserReader;
 
 import javax.swing.*;
 
+@SuppressWarnings("serial")
 public class MainFrame extends JFrame implements Mediator {
     public static String LoginPanelName = "Login";
     public static String ConcertsPanelName = "Concerts";
@@ -25,16 +26,18 @@ public class MainFrame extends JFrame implements Mediator {
 
         this.add(loginPanel);
         loginPanel.setVisible(true);
+        // loginPanel.setVisible(false); //for Test. default is true
 
         this.add(concertsPanel);
         concertsPanel.setVisible(false);
+        // concertsPanel.setVisible(true); //for Test. default is false
 
         this.add(myConcertsPanel);
         myConcertsPanel.setVisible(false);
 
         // Start with Login Panel
         this.setSize(LoginPanel.ALL_PANEL_WIDTH, LoginPanel.PANEL_HEIGHT);
-        // this.setSize(ConcertsPanel.ALL_PANEL_WIDTH, ConcertsPanel.PANEL_HEIGHT);
+        // this.setSize(ConcertsPanel.ALL_PANEL_WIDTH,ConcertsPanel.PANEL_HEIGHT); //for Test.default is upper.
     }
 
     public void showLoginPanel() {
@@ -81,8 +84,8 @@ public class MainFrame extends JFrame implements Mediator {
     }
 
     public void colleagueChanged() {
-        // 渡された値を元に, Viewを変更
-        // Login後MyConcertsに移行
+        // based on pasaed value, change view
+        // after login, covert MyConcerts
 
         if (this.getNextPanelName().equals(MyConcertsPanelName)) {
             this.showMyConcertsPanel();
@@ -91,7 +94,7 @@ public class MainFrame extends JFrame implements Mediator {
         } else if (this.getNextPanelName().equals(LoginPanelName)) {
             this.showLoginPanel();
         } else {
-            System.err.println("存在しない画面です");
+            System.err.println("not exist screen");
             // for now, go back to the login screen
             this.showLoginPanel();
         }
