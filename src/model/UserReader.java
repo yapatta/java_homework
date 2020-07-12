@@ -22,33 +22,6 @@ public class UserReader {
         return System.getProperty("user.dir") + "/src/model/data/user_concerts/" + "concerts_" + this.userName + ".csv";
     }
 
-    // Search for specific subscribers with a concert name
-    public static ArrayList<ArrayList<String>> getSpecificConcerts(String concertName) {
-        ArrayList<ArrayList<String>> users = new ArrayList<>();
-        // FIXME: not yet implemented
-        return users;
-    }
-
-    // search for concert name with prefix
-    public static ArrayList<ArrayList<String>> searchForConcerts(String prefix) {
-        ArrayList<ArrayList<String>> allConcerts = getAllConcerts();
-
-        String regex = "^" + prefix;
-        Pattern p = Pattern.compile(regex);
-
-        ArrayList<ArrayList<String>> retConcerts = new ArrayList<>();
-
-        for (var concert : allConcerts) {
-            Matcher m = p.matcher(concert.get(0));
-
-            if (m.find()) {
-                retConcerts.add(concert);
-            }
-        }
-
-        return retConcerts;
-    }
-
     public void updateMyConcerts(ArrayList<String> addedConcert) {
         ArrayList<ArrayList<String>> mc = getMyConcerts();
 
@@ -65,7 +38,6 @@ public class UserReader {
     }
 
     public void writeMyConcerts(ArrayList<ArrayList<String>> mc) {
-
         BufferedWriter myConcertBuffer = null;
 
         try {
@@ -96,13 +68,6 @@ public class UserReader {
         } catch (IOException e) {
             System.exit(1);
         }
-    }
-
-    public void deleteMyConcert(int index) {
-        ArrayList<ArrayList<String>> mc = getMyConcerts();
-        mc.remove(index);
-
-        writeMyConcerts(mc);
     }
 
     public ArrayList<ArrayList<String>> getMyConcerts() {
@@ -153,6 +118,17 @@ public class UserReader {
         }
 
         return myConcerts;
+    }
+
+    public void deleteMyConcert(int index) {
+        ArrayList<ArrayList<String>> mc = getMyConcerts();
+        mc.remove(index);
+
+        writeMyConcerts(mc);
+    }
+
+    private static String getUserConcertsFilePath(String userName) {
+        return System.getProperty("user.dir") + "/src/model/data/user_concerts/" + "concerts_" + userName + ".csv";
     }
 
     private static String getFileNamePath(String fileName) {
@@ -211,5 +187,76 @@ public class UserReader {
         }
 
         return concertslist;
+    }
+
+    public static ArrayList<ArrayList<String>> getUserConcerts(String userName) {
+        List<String> rows = null;
+
+        try {
+            String fname = getUserConcertsFilePath(userName);
+            File f = new File(fname);
+
+            if (!f.exists()) {
+                return new ArrayList<>();
+            }
+
+            rows = Files.readAllLines(Paths.get(fname), Charset.defaultCharset());
+        } catch (IOException e) {
+            System.out.println("Failed to read a file");
+            System.exit(1);
+        }
+
+        ArrayList<ArrayList<String>> concertslist = new ArrayList<>();
+
+        for (String row : rows) {
+            ArrayList<String> c = new ArrayList<>();
+            Collections.addAll(c, row.split(",", 0));
+            concertslist.add(c);
+        }
+
+        return concertslist;
+    }
+
+
+    // Search for specific subscribers with a concert name
+    public static ArrayList<ArrayList<String>> getSpecificConcerts(String concertName) {
+        ArrayList<ArrayList<String>> allUsers = UserReader.getAllUsers();
+
+        ArrayList<ArrayList<String>> retUsers = new ArrayList<>();
+
+        for (ArrayList<String> user : allUsers) {
+            String uname = user.get(0);
+
+            var concerts = getUserConcerts(uname);
+
+            for (ArrayList<String> concert : concerts) {
+                if (concertName.equals(concert.get(0))) {
+                    retUsers.add(user);
+                    break;
+                }
+            }
+        }
+
+        return retUsers;
+    }
+
+    // search for concert name with prefix
+    public static ArrayList<ArrayList<String>> searchForConcerts(String prefix) {
+        ArrayList<ArrayList<String>> allConcerts = getAllConcerts();
+
+        String regex = "^" + prefix;
+        Pattern p = Pattern.compile(regex);
+
+        ArrayList<ArrayList<String>> retConcerts = new ArrayList<>();
+
+        for (var concert : allConcerts) {
+            Matcher m = p.matcher(concert.get(0));
+
+            if (m.find()) {
+                retConcerts.add(concert);
+            }
+        }
+
+        return retConcerts;
     }
 }

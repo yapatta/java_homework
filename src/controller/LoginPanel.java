@@ -1,4 +1,4 @@
-package mediator;
+package controller;
 
 import components.ColleagueButton;
 import components.ColleagueTextField;
@@ -9,31 +9,30 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LoginFrame extends JFrame implements ActionListener, Mediator {
+public class LoginPanel extends JPanel implements ActionListener, Mediator {
     private ColleagueTextField textUser;
     private ColleagueTextField textUserId;
     private ColleagueButton buttonOk;
+    private MainFrame mainFrame;
 
-    public LoginFrame(String title) {
-        super(title);
+    public LoginPanel(MainFrame mf, String title) {
+        this.mainFrame = mf;
+        this.setName(title);
 
-        setSize(400, 600);
-        // Position Center
-        setLocationRelativeTo(null);
-        // Finish the application when quit button is pushed
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(400, 600);
 
-        setLayout(new FlowLayout());
+        this.setLayout(new FlowLayout());
 
-        createColleagues();
+        this.createColleagues();
 
         // JPanel for Main Message
         JPanel spacePanel = new JPanel();
-        spacePanel.setLayout(new BorderLayout());
-        JLabel subject = new JLabel("Very Useful" + title.substring(0, 1).toUpperCase() + title.substring(1).toLowerCase());
-        subject.setFont(new Font("Arial", Font.PLAIN, 20));
+        spacePanel.setLayout(new GridLayout(1, 1));
+        spacePanel.setPreferredSize(new Dimension(300, 100));
+        JLabel subject = new JLabel(title.substring(0, 1).toUpperCase() + title.substring(1).toLowerCase());
+        subject.setHorizontalAlignment(JLabel.CENTER);
+        subject.setFont(new Font("Arial", Font.PLAIN, 30));
         spacePanel.add(subject);
-        spacePanel.add(Box.createVerticalStrut(50), BorderLayout.SOUTH);
 
         // JPanel for Input
         JPanel inputPanel = new JPanel();
@@ -55,12 +54,9 @@ public class LoginFrame extends JFrame implements ActionListener, Mediator {
         submitPanel.setLayout(new GridLayout(1, 1));
         submitPanel.add(buttonOk);
 
-        Container contentPane = getContentPane();
-        contentPane.add(spacePanel);
-        contentPane.add(inputPanel);
-        contentPane.add(submitPanel);
-
-        setVisible(true);
+        this.add(spacePanel);
+        this.add(inputPanel);
+        this.add(submitPanel);
     }
 
     public void createColleagues() {

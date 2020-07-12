@@ -1,4 +1,4 @@
-package mediator;
+package controller;
 
 public interface Mediator {
     public abstract void createColleagues();

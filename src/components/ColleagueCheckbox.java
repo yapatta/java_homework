@@ -1,6 +1,6 @@
 package components;
 
-import mediator.Mediator;
+import controller.Mediator;
 
 import java.awt.*;
 import java.awt.event.ItemEvent;

@@ -1,6 +1,6 @@
 package components;
 
-import mediator.Mediator;
+import controller.Mediator;
 
 import javax.swing.*;
 import java.awt.*;
