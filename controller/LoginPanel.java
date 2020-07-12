@@ -14,6 +14,7 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
     private ColleagueTextField textUserId;
     private ColleagueButton buttonOk;
     private MainFrame mainFrame;
+    private String userName;
 
     public LoginPanel(MainFrame mf, String title) {
         this.mainFrame = mf;
@@ -75,14 +76,14 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
     public void colleagueChanged() {
         // Login
         if (UserReader.isCorrectUser(textUser.getText(), textUserId.getText())) {
-
+            this.mainFrame.setUserName(textUser.getText());
+            this.mainFrame.setNextPanelName(MainFrame.MyConcertsPanelName);
+            this.mainFrame.colleagueChanged();
         } else {
             JOptionPane.showMessageDialog(this, "Login Failure", "Warn", JOptionPane.WARNING_MESSAGE);
         }
     }
 
     public void actionPerformed(ActionEvent e) {
-        System.out.println(e.toString());
-        System.exit(0);
     }
 }
