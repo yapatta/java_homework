@@ -75,9 +75,9 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
     public void colleagueChanged() {
         // Login
         if (UserReader.isCorrectUser(textUser.getText(), textUserId.getText())) {
-            JOptionPane.showMessageDialog(this, "Success", "Info", JOptionPane.INFORMATION_MESSAGE);
+
         } else {
-            JOptionPane.showMessageDialog(this, "Failure", "Warn", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Login Failure", "Warn", JOptionPane.WARNING_MESSAGE);
         }
     }
 
