@@ -5,6 +5,9 @@ import model.UserReader;
 import javax.swing.*;
 
 public class MainFrame extends JFrame implements Mediator {
+    public static int WIDTH = 900;
+    public static int HEIGHT = 1000;
+
     public static String[] FrameNames = {"login", "concerts", "user_concerts"};
 
     // make several panels
@@ -23,7 +26,7 @@ public class MainFrame extends JFrame implements Mediator {
         concertsPanel.setVisible(true);
 
         // FIXME: modify accordingly
-        setSize(800, 1000);
+        setSize(WIDTH, HEIGHT);
     }
 
     // hide old panel and show new panel
