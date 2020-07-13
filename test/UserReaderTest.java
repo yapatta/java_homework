@@ -23,7 +23,7 @@ class UserReaderTest {
     void updateMyConcerts() {
         ArrayList<String> newConcert = new ArrayList<String>(Arrays.asList("false", "Magical Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100"));
         UserReader ur = new UserReader("yyahata");
-        ur.updateMyConcerts(newConcert);
+        ur.updateMyConcerts(new ArrayList<Integer>(), new ArrayList<String>());
     }
 
     @org.junit.jupiter.api.Test
@@ -107,5 +107,15 @@ class UserReaderTest {
         expected = new ArrayList<>();
 
         assertEquals(expected, c);
+    }
+
+    @org.junit.jupiter.api.Test
+    void getShowConcertsAsObject() {
+        var co = new UserReader("yyahata").getShowConcertsAsObject();
+        for (var c : co) {
+            for (var cc : c) {
+                System.out.println(cc);
+            }
+        }
     }
 }
