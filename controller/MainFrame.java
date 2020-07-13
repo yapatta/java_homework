@@ -101,6 +101,10 @@ public class MainFrame extends JFrame implements Mediator {
         this.ur = new UserReader(userName);
     }
 
+    public void unsetUserReader() {
+        this.ur = null;
+    }
+
     public UserReader getUserReader() {
         return this.ur;
     }

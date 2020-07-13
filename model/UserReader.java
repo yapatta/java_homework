@@ -20,19 +20,54 @@ public class UserReader {
     }
 
     public static Object[][] getAllConcertsAsObject() {
-        ArrayList<ArrayList<String>> allConcerts = getAllConcerts();
-        Object[][] retConcerts = new Object[allConcerts.size()][7];
+        return getConcertsAsObject(getAllConcerts());
+    }
 
-        for (int i = 0; i < allConcerts.size(); i++) {
-            for (int j = 0; j < allConcerts.get(i).size(); j++) {
+    public Object[][] getMyConcertsAsObject() {
+        return getConcertsAsObject(this.getMyConcerts());
+    }
+
+    public static Object[][] getConcertsAsObject(ArrayList<ArrayList<String>> concerts) {
+        Object[][] retConcerts = new Object[concerts.size()][7];
+
+        for (int i = 0; i < concerts.size(); i++) {
+            for (int j = 0; j < concerts.get(i).size(); j++) {
                 if (j == 0) {
-                    retConcerts[i][j] = allConcerts.get(i).get(j).equals("true");
+                    retConcerts[i][j] = concerts.get(i).get(j).equals("true");
                 } else {
-                    retConcerts[i][j] = allConcerts.get(i).get(j);
+                    retConcerts[i][j] = concerts.get(i).get(j);
                 }
             }
         }
         return retConcerts;
+    }
+
+    public Object[][] getShowConcertsAsObject() {
+        var allConcerts = getAllConcerts();
+        var myConcerts = this.getMyConcerts();
+
+        ArrayList<ArrayList<String>> retConcertsObject = new ArrayList<>();
+        int index = 0;
+        for (var concert : allConcerts) {
+            ArrayList<String> retConcert = concert;
+            for (var myConcert : myConcerts) {
+                boolean sameFlag = true;
+                for (int i = 1; i < 7; i++) {
+                    if (!concert.get(i).equals(myConcert.get(i))) {
+                        sameFlag = false;
+                        break;
+                    }
+                }
+                if (sameFlag && myConcert.get(0).equals("true")) {
+                    retConcert = myConcert;
+                    break;
+                }
+            }
+
+            retConcertsObject.add(retConcert);
+        }
+
+        return getConcertsAsObject(retConcertsObject);
     }
 
     public String getUserName() {
@@ -43,19 +78,39 @@ public class UserReader {
         return System.getProperty("user.dir") + "/model/data/user_concerts/" + "concerts_" + this.userName + ".csv";
     }
 
-    public void updateMyConcerts(ArrayList<String> addedConcert) {
-        ArrayList<ArrayList<String>> mc = getMyConcerts();
+    // based on the idea in which concerts name isn't duplicated
+    public void updateMyConcerts(ArrayList<Integer> addedIndexList, ArrayList<String> deletedNameList) {
+        ArrayList<ArrayList<String>> myConcerts = getMyConcerts();
 
-        // do nothing when the name was already added
-        for (var c : mc) {
-            if (addedConcert.equals(c)) {
-                return;
+        for (var index : addedIndexList) {
+            ArrayList<String> concert = getConcertByIndex(index);
+
+            concert.set(0, "true");
+
+            boolean existFlag = true;
+
+            for (var myConcert : myConcerts) {
+                if (myConcert.equals(concert)) {
+                    existFlag = false;
+                    break;
+                }
+            }
+
+            if (existFlag) {
+                myConcerts.add(concert);
             }
         }
 
-        mc.add(addedConcert);
+        for (var deletedConcertName : deletedNameList) {
+            for (int i=0;i<myConcerts.size();i++) {
+                if (myConcerts.get(i).get(1).equals(deletedConcertName)) {
+                    myConcerts.remove(i);
+                    break;
+                }
+            }
+        }
 
-        writeMyConcerts(mc);
+        writeMyConcerts(myConcerts);
     }
 
     public void writeMyConcerts(ArrayList<ArrayList<String>> mc) {
@@ -280,5 +335,15 @@ public class UserReader {
         }
 
         return retConcerts;
+    }
+
+    public static ArrayList<String> getConcertByIndex(int index) {
+        var allConcerts = getAllConcerts();
+        for (int i = 0; i < allConcerts.size(); i++) {
+            if (index == i) {
+                return allConcerts.get(i);
+            }
+        }
+        return new ArrayList<String>();
     }
 }
