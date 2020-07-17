@@ -110,9 +110,7 @@ public class MyConcertsPanel extends JPanel implements ActionListener, Mediator 
     public void colleagueChanged() {
         if (this.buttonDelete.nowAction()) {
             this.updateCheckedConcerts();
-
-            this.mainFrame.setNextPanelName(MainFrame.ConcertsPanelName);
-
+            //this.mainFrame.setNextPanelName(MainFrame.ConcertsPanelName);
         } else if (this.buttonAllConcerts.nowAction()) {
             this.mainFrame.setNextPanelName(MainFrame.ConcertsPanelName);
         } else if (this.buttonLogout.nowAction()) {

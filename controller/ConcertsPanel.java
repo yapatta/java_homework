@@ -40,7 +40,8 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
         JPanel labelPanel = new JPanel();
         labelPanel.setLayout(new GridLayout(1, 1));
         labelPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 100));
-        JLabel subject = new JLabel(title.substring(0, 1).toUpperCase() + title.substring(1).toLowerCase());
+        title = "All " + title.substring(0, 1).toUpperCase() + title.substring(1).toLowerCase();
+        JLabel subject = new JLabel(title);
 
         subject.setHorizontalAlignment(JLabel.CENTER);
         subject.setFont(new Font("Arial", Font.PLAIN, 30));
