@@ -52,7 +52,7 @@ public class MainFrame extends JFrame implements Mediator {
         this.setSize(ConcertsPanel.ALL_PANEL_WIDTH, ConcertsPanel.PANEL_HEIGHT);
         this.setLocationRelativeTo(null);
 
-        this.concertsPanel.initialize();
+        this.concertsPanel.reload();
 
         this.concertsPanel.setVisible(true);
     }
@@ -63,7 +63,7 @@ public class MainFrame extends JFrame implements Mediator {
         this.setSize(ConcertsPanel.ALL_PANEL_WIDTH, ConcertsPanel.PANEL_HEIGHT);
         this.setLocationRelativeTo(null);
 
-        this.myConcertsPanel.initialize();
+        this.myConcertsPanel.reload();
 
         this.myConcertsPanel.setVisible(true);
     }
