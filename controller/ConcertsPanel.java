@@ -121,7 +121,7 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
         }
 
         /*set scroll*/
-        scrollTable.setPreferredSize(new Dimension(PANEL_WIDTH, 500));
+        scrollTable.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT/2));
         //Concert Table
         Object[][] showConcertsObject = this.mainFrame.getUserReader().getShowConcertsAsObject();
 
@@ -141,17 +141,16 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
     }
 
     public void updateCheckedConcerts() {
-        ArrayList<Integer> addedConcertsIndex = new ArrayList<>();
-        ArrayList<String> deletedConcertsIndex = new ArrayList<>();
-
+        ArrayList<ArrayList<String>> addedConcerts = new ArrayList<>();
         for (int i = 0; i < this.concertsTable.getRowCount(); i++) {
             if (Boolean.parseBoolean(this.concertsTable.getValueAt(i, 0).toString())) {
-                addedConcertsIndex.add(i);
-            } else {
-                deletedConcertsIndex.add(this.concertsTable.getValueAt(i,1).toString());
+                ArrayList<String> addedConcert = new ArrayList<>();
+                for (int j = 0; j < this.concertsTable.getColumnCount(); j++) {
+                    addedConcert.add(this.concertsTable.getValueAt(i, j).toString());
+                }
+                addedConcerts.add(addedConcert);
             }
         }
 
-        this.mainFrame.getUserReader().updateMyConcerts(addedConcertsIndex, deletedConcertsIndex);
-    }
+        this.mainFrame.getUserReader().writeMyConcerts(addedConcerts); }
 }
