@@ -85,7 +85,7 @@ public class MyConcertsPanel extends JPanel implements ActionListener, Mediator 
 
         scrolleTable.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT / 2));
 
-        // フォーマット作成
+        // create format
         DefaultTableModel modeltable = new DefaultTableModel(COLUMN_NAMES, 0) {
             public Class<?> getColumnClass(int columnIndex) {
                 if (columnIndex == 0) {
