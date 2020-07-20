@@ -1,5 +1,7 @@
 package model;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -14,6 +16,7 @@ import java.util.regex.Pattern;
 public class UserReader {
     private final String userName;
     public static int NAME_INDEX = 1;
+    public static int PASSWORD_INDEX = 2;
 
     public UserReader(String userName) {
         this.userName = userName;
@@ -215,6 +218,20 @@ public class UserReader {
         ArrayList<ArrayList<String>> usersList = getAllUsers();
 
         for (var up : usersList) {
+            // if use password this index changed (0,1) -> (1,2)
+            if (userName.equals(up.get(0)) && password.equals(up.get(1))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean isCorrectAdmin(String userName, String password) {
+        ArrayList<ArrayList<String>> usersList = getAllAdmins();
+
+        for (var up : usersList) {
+            // if use password this index changed (0,1) -> (1,2)
             if (userName.equals(up.get(0)) && password.equals(up.get(1))) {
                 return true;
             }
@@ -266,6 +283,41 @@ public class UserReader {
         return concertslist;
     }
 
+    public static ArrayList<String> getAllConcertsName() {
+        ArrayList<ArrayList<String>> allConcerts = getAllConcerts();
+
+        ArrayList<String> allConcertsName = new ArrayList<String>();
+
+        for (int i = 0; i < allConcerts.size(); i++){
+            ArrayList<String> concert = allConcerts.get(i);
+            allConcertsName.add(concert.get(NAME_INDEX));
+        }
+
+        return allConcertsName;
+    }
+
+    public static ArrayList<ArrayList<String>> getAllAdmins(){
+        List<String> rows = null;
+
+        try{
+            rows = Files.readAllLines(Paths.get(getFileNamePath("admin.csv")), Charset.defaultCharset());
+        }catch (IOException e) {
+            System.err.println(e.getMessage());
+            System.out.println("Failed to read a admin file");
+            System.exit(1);
+        }
+
+        ArrayList<ArrayList<String>> adminslist = new ArrayList<>();
+
+        for (String row : rows) {
+            ArrayList<String> c = new ArrayList<>();
+            Collections.addAll(c, row.split(",", 0));
+            adminslist.add(c);
+        }
+
+        return adminslist;
+    }
+
     public static ArrayList<ArrayList<String>> getUserConcerts(String userName) {
         List<String> rows = null;
 
@@ -298,22 +350,24 @@ public class UserReader {
     // Search for specific subscribers with a concert name
     public static ArrayList<ArrayList<String>> getSpecificConcerts(String concertName) {
         ArrayList<ArrayList<String>> allUsers = UserReader.getAllUsers();
-
         ArrayList<ArrayList<String>> retUsers = new ArrayList<>();
 
-        for (ArrayList<String> user : allUsers) {
-            String uname = user.get(NAME_INDEX);
+        try{
+            for (ArrayList<String> user : allUsers) {
+                String uname = user.get(NAME_INDEX);
 
-            var concerts = getUserConcerts(uname);
+                var concerts = getUserConcerts(uname);
 
-            for (ArrayList<String> concert : concerts) {
-                if (concertName.equals(concert.get(NAME_INDEX))) {
-                    retUsers.add(user);
-                    break;
+                for (ArrayList<String> concert : concerts) {
+                    if (concertName.equals(concert.get(NAME_INDEX))) {
+                        retUsers.add(user);
+                        break;
+                    }
                 }
             }
+        } catch (NullPointerException e){
+            return null;
         }
-
         return retUsers;
     }
 
