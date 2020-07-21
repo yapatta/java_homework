@@ -134,6 +134,60 @@ public class UserReader {
         return myConcerts;
     }
 
+    public static void deleteUserByName(String uname) {
+        ArrayList<ArrayList<String>> allUsers = UserReader.getAllUsers();
+        ArrayList<ArrayList<String>> retUsers = new ArrayList<>();
+
+        for (var user : allUsers) {
+            if (!uname.equals(user.get(0))) {
+                retUsers.add(user);
+            }
+        }
+
+        writeUsers(retUsers);
+
+        File file = new File(getUserConcertsFilePath(uname));
+
+        if (file.exists()) {
+            if(!file.delete()) {
+                System.err.println("Cannot delete file");
+            }
+        }
+    }
+
+    public static void writeUsers(ArrayList<ArrayList<String>> users) {
+        BufferedWriter UsersBuffer = null;
+
+        try {
+            UsersBuffer = Files.newBufferedWriter(Paths.get(getFileNamePath("users.csv")), Charset.defaultCharset());
+        } catch (IOException e) {
+            System.exit(1);
+        }
+
+        for (var user : users) {
+            StringBuilder s = new StringBuilder();
+            for (int i = 0; i < user.size(); i++) {
+                s.append(user.get(i));
+                if (i != user.size() - 1) {
+                    s.append(",");
+                }
+            }
+
+            try {
+                UsersBuffer.write(s.toString());
+                UsersBuffer.newLine();
+            } catch (IOException e) {
+                System.exit(1);
+            }
+        }
+
+        try {
+            UsersBuffer.close();
+        } catch (IOException e) {
+            System.exit(1);
+        }
+    }
+
     public static void writeUserConcerts(String userName, ArrayList<ArrayList<String>> userConcerts) {
         BufferedWriter userConcertBuffer = null;
 

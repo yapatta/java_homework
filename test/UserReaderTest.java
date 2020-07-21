@@ -35,6 +35,11 @@ class UserReaderTest {
     }
 
     @org.junit.jupiter.api.Test
+    void deleteUserByName() {
+        UserReader.deleteUserByName("syanagisawa");
+    }
+
+    @org.junit.jupiter.api.Test
     void isCorrectUser() {
         assertTrue(UserReader.isCorrectUser("yyahata", "yyahata"));
     }
