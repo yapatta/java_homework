@@ -1,5 +1,6 @@
 package controller;
 
+import components.Colleague;
 import components.ColleagueButton;
 import components.ColleagueTextField;
 import lib.GUILibrary;
@@ -17,7 +18,9 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
 
     private ColleagueTextField textUser;
     private ColleagueTextField textUserId;
+    private JPasswordField textPassWord;
     private ColleagueButton buttonOk;
+    private JButton exitButton;
     private MainFrame mainFrame;
 
     public LoginPanel(MainFrame mf, String title) {
@@ -51,26 +54,40 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
         inputPanel.add(textUser);
         inputPanel.add(new JLabel("Member ID:"));
         inputPanel.add(textUserId);
+        //inputPanel.add(new JLabel("Pass Word:"));
+        //inputPanel.add(textPassWord);
 
-        // JPanel for OK Button
-        JPanel submitPanel = new JPanel();
-        submitPanel.setPreferredSize(new Dimension(WIDTH, 50));
+        // JPanel for Buttons
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setPreferredSize(new Dimension(WIDTH, 100));
 
-        submitPanel.setLayout(new GridLayout(1, 1));
-        submitPanel.add(buttonOk);
+        GridLayout buttonLayout = new GridLayout(0,1);
+        buttonLayout.setVgap(20);
+        buttonsPanel.setLayout(buttonLayout);
+        buttonsPanel.add(buttonOk);
+        buttonsPanel.add(exitButton);
 
         this.add(spacePanel);
         this.add(GUILibrary.getHr(WIDTH, 0));
         this.add(inputPanel);
         this.add(GUILibrary.getHr(WIDTH, 0));
-        this.add(submitPanel);
+        this.add(buttonsPanel);
+
     }
 
     public void createColleagues() {
 
         textUser = new ColleagueTextField("", 10);
         textUserId = new ColleagueTextField("", 10);
+        //textUserId = new JPasswordField();
+        //textUserId.setEchoChar('*');
+        //textPassWord = new JPasswordField();
+        //textPassWord.setEchoChar('*');
+
         buttonOk = new ColleagueButton("Login");
+
+        exitButton = new JButton("Exit");
+        exitButton.addActionListener(this);
 
         textUser.setMediator(this);
         textUserId.setMediator(this);
@@ -81,9 +98,16 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
 
     public void colleagueChanged() {
         // Login
+        //String passWordStr = new String(textPassWord.getPassword());
         if (UserReader.isCorrectUser(textUser.getText(), textUserId.getText())) {
+            // if use Password field, make this line Changed: testUser.getText() -> textUserId.getText()
             this.mainFrame.setUserReader(textUser.getText());
             this.mainFrame.setNextPanelName(MainFrame.MyConcertsPanelName);
+            this.mainFrame.colleagueChanged();
+        } else if (UserReader.isCorrectAdmin(textUser.getText(), textUserId.getText())){
+            JOptionPane.showMessageDialog(this, "You are Admin", "info", JOptionPane.INFORMATION_MESSAGE);
+            this.mainFrame.setUserReader(textUser.getText());
+            this.mainFrame.setNextPanelName(MainFrame.AdminPanelName);
             this.mainFrame.colleagueChanged();
         } else {
             JOptionPane.showMessageDialog(this, "Login Failure", "Warn", JOptionPane.WARNING_MESSAGE);
@@ -91,5 +115,8 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
     }
 
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == exitButton){
+            System.exit(0);
+        }
     }
 }

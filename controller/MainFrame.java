@@ -9,6 +9,7 @@ public class MainFrame extends JFrame implements Mediator {
     public static String LoginPanelName = "Login";
     public static String ConcertsPanelName = "Concerts";
     public static String MyConcertsPanelName = "MyConcerts";
+    public static String AdminPanelName = "Admin";
     public static int WIDTH = 900;
     public static int HEIGHT = 1000;
 
@@ -16,6 +17,7 @@ public class MainFrame extends JFrame implements Mediator {
     LoginPanel loginPanel;
     ConcertsPanel concertsPanel;
     MyConcertsPanel myConcertsPanel;
+    AdminPanel adminPanel;
 
     private UserReader ur;
     private String nextPanelName = "";
@@ -32,6 +34,9 @@ public class MainFrame extends JFrame implements Mediator {
 
         this.add(myConcertsPanel);
         myConcertsPanel.setVisible(false);
+
+        this.add(adminPanel);
+        adminPanel.setVisible(false);
 
         // Start with Login Panel
         this.setSize(LoginPanel.ALL_PANEL_WIDTH, LoginPanel.PANEL_HEIGHT);
@@ -68,16 +73,27 @@ public class MainFrame extends JFrame implements Mediator {
         this.myConcertsPanel.setVisible(true);
     }
 
+    public void showAdminPanel() {
+        this.setAllVisibleFalse();
+
+        this.setSize(AdminPanel.ALL_PANEL_WIDTH,AdminPanel.PANEL_HEIGHT);
+        this.setLocationRelativeTo(null);
+
+        this.adminPanel.setVisible(true);
+    }
+
     public void setAllVisibleFalse() {
         this.loginPanel.setVisible(false);
         this.concertsPanel.setVisible(false);
         this.myConcertsPanel.setVisible(false);
+        this.adminPanel.setVisible(false);
     }
 
     public void createColleagues() {
         this.loginPanel = new LoginPanel(this, LoginPanelName);
         this.concertsPanel = new ConcertsPanel(this, ConcertsPanelName);
         this.myConcertsPanel = new MyConcertsPanel(this, MyConcertsPanelName);
+        this.adminPanel = new AdminPanel(this,AdminPanelName);
     }
 
     public void colleagueChanged() {
@@ -90,6 +106,8 @@ public class MainFrame extends JFrame implements Mediator {
             this.showConcertsPanel();
         } else if (this.getNextPanelName().equals(LoginPanelName)) {
             this.showLoginPanel();
+        } else if (this.getNextPanelName().equals(AdminPanelName)) {
+            this.showAdminPanel();
         } else {
             System.err.println("not exist screen");
             // for now, go back to the login screen
