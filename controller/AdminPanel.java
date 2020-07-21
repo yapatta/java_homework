@@ -9,8 +9,6 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.Vector;
@@ -62,14 +60,14 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
 
         ArrayList<String> allConcertsList = UserReader.getAllConcertsName();
         Vector<String> allConcertsVector = new Vector<String>();
-        for (int i = 0;i < allConcertsList.size(); i++){
-            allConcertsVector.add( allConcertsList.get(i) );
+        for (int i = 0; i < allConcertsList.size(); i++) {
+            allConcertsVector.add(allConcertsList.get(i));
         }
         //searchConcertName = allConcertsList.get(0);
-        comboConcerts = new JComboBox<String>( allConcertsVector );
+        comboConcerts = new JComboBox<String>(allConcertsVector);
         comboConcerts.setEditable(true);
         //comboConcerts.addItemListener( new MyListSelect() );
-        comboConcerts.addActionListener( new MyListSelect() );
+        comboConcerts.addActionListener(new MyListSelect());
 
         searchConcertPanel.add(searchConcertLabel);
         searchConcertPanel.add(comboConcerts);
@@ -78,7 +76,7 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
 
         // search User Panel
         JPanel searchUserPanel = new JPanel();
-        searchUserPanel.setLayout(new GridLayout(1,4));
+        searchUserPanel.setLayout(new GridLayout(1, 4));
         searchUserPanel.setPreferredSize(new Dimension(PANEL_WIDTH / 2, 30));
 
         JLabel searchUserLabel = new JLabel("User Information:");
@@ -86,15 +84,15 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
 
         ArrayList<ArrayList<String>> allUsersList = UserReader.getAllUsers();
         Vector<String> allUserVector = new Vector<String>();
-        for (int i = 0;i < allUsersList.size(); i++){
+        for (int i = 0; i < allUsersList.size(); i++) {
             ArrayList<String> userlist = allUsersList.get(i);
-            allUserVector.add( userlist.get(0) );
+            allUserVector.add(userlist.get(0));
         }
         //searchConcertName = allUserVector.get(0);
-        comboUsers = new JComboBox<String>( allUserVector );
+        comboUsers = new JComboBox<String>(allUserVector);
         comboUsers.setEditable(true);
         //comboUsers.addItemListener( new MyListSelect() );
-        comboUsers.addActionListener(new MyListSelect() );
+        comboUsers.addActionListener(new MyListSelect());
 
         searchUserPanel.add(searchUserLabel);
         //userCombo.add(new JLabel("Select User:"));
@@ -103,15 +101,15 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
 
         //Result or Edit Panel
         JPanel resultPanel = new JPanel();
-        resultPanel.setLayout(new GridLayout(0,1));
+        resultPanel.setLayout(new GridLayout(0, 1));
 
-        resultTextArea = new JTextArea(10,50);
+        resultTextArea = new JTextArea(10, 50);
         JScrollPane resultScroll = new JScrollPane(resultTextArea);
         resultScroll.setBorder(new TitledBorder("Result"));
 
         //logout Panel
         JPanel logoutPanel = new JPanel();
-        logoutPanel.setPreferredSize(new Dimension(PANEL_WIDTH/3, 50));
+        logoutPanel.setPreferredSize(new Dimension(PANEL_WIDTH / 3, 50));
         logoutPanel.setLayout(new GridLayout(1, 4));
         logoutPanel.add(buttonLogout);
 
@@ -150,12 +148,12 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
         if (this.searchConcertButton.nowAction()) {
             ArrayList<ArrayList<String>> resultUsersList = UserReader.getSpecificConcerts(searchConcertName);
             ArrayList<String> resultUser = new ArrayList<>();
-            if (resultUsersList == null){
-                JOptionPane.showMessageDialog(this,"Select Concert Again","Error!",JOptionPane.ERROR_MESSAGE);
-            } else{
+            if (resultUsersList == null) {
+                JOptionPane.showMessageDialog(this, "Select Concert Again", "Error!", JOptionPane.ERROR_MESSAGE);
+            } else {
                 resultTextArea.setText("");
-                for(int i = 0; i < resultUsersList.size(); i++){
-                    resultUser.add( ( resultUsersList.get(i) ).get(0));
+                for (int i = 0; i < resultUsersList.size(); i++) {
+                    resultUser.add((resultUsersList.get(i)).get(0));
                     resultTextArea.append(resultUser.get(i));
                     resultTextArea.append("\n");
                 }
@@ -163,15 +161,15 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
                 //JOptionPane.showMessageDialog(this,resultUser,"Result",JOptionPane.INFORMATION_MESSAGE);
 
             }
-        } else if (this.searchUserButton.nowAction()){
+        } else if (this.searchUserButton.nowAction()) {
             ArrayList<ArrayList<String>> resultConcertsList = UserReader.getUserConcerts(searchUserName);
             ArrayList<String> resultConcert = new ArrayList<>();
-            if (resultConcertsList.size() == 0){
-                JOptionPane.showMessageDialog(this,"Select User Again","Error!",JOptionPane.ERROR_MESSAGE);
-            }else{
+            if (resultConcertsList.size() == 0) {
+                JOptionPane.showMessageDialog(this, "Select User Again", "Error!", JOptionPane.ERROR_MESSAGE);
+            } else {
                 resultTextArea.setText("");
-                for(int i = 0; i < resultConcertsList.size(); i++){
-                    resultConcert.add( ( resultConcertsList.get(i) ).get(1));
+                for (int i = 0; i < resultConcertsList.size(); i++) {
+                    resultConcert.add((resultConcertsList.get(i)).get(1));
                     resultTextArea.append(resultConcert.get(i));
                     resultTextArea.append("\n");
                 }
@@ -199,11 +197,11 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == comboConcerts){
-                searchConcertName = (String)comboConcerts.getSelectedItem();
-                System.out.println("Now Concert Name:" + searchConcertName );
-            } else if (e.getSource() == comboUsers){
-                searchUserName = (String)comboUsers.getSelectedItem();
+            if (e.getSource() == comboConcerts) {
+                searchConcertName = (String) comboConcerts.getSelectedItem();
+                System.out.println("Now Concert Name:" + searchConcertName);
+            } else if (e.getSource() == comboUsers) {
+                searchUserName = (String) comboUsers.getSelectedItem();
                 System.out.println("Now User Name:" + searchUserName);
             }
         }
