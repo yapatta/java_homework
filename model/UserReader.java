@@ -171,9 +171,9 @@ public class UserReader {
         ArrayList<ArrayList<String>> allConcerts = getAllConcerts();
         ArrayList<ArrayList<String>> retConcerts = new ArrayList<>();
 
-        for (var myConcert : allConcerts) {
-            if (!myConcert.get(1).equals(concertName)) {
-                retConcerts.add(myConcert);
+        for (var concert : allConcerts) {
+            if (!concert.get(NAME_INDEX).equals(concertName)) {
+                retConcerts.add(concert);
             }
         }
 
@@ -191,11 +191,12 @@ public class UserReader {
 
                 for (ArrayList<String> concert : concerts) {
                     if (!concertName.equals(concert.get(NAME_INDEX))) {
+                        concert.set(0, "true");
                         retUserConcerts.add(concert);
                     }
                 }
 
-                writeUserConcerts(uname, retConcerts);
+                writeUserConcerts(uname, retUserConcerts);
             }
         } catch (NullPointerException e) {
             System.exit(1);
