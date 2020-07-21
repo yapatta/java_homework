@@ -1,7 +1,5 @@
 package model;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -16,7 +14,6 @@ import java.util.regex.Pattern;
 public class UserReader {
     private final String userName;
     public static int NAME_INDEX = 1;
-    public static int PASSWORD_INDEX = 2;
 
     public UserReader(String userName) {
         this.userName = userName;
@@ -82,71 +79,9 @@ public class UserReader {
     }
 
     // based on the idea in which concerts name isn't duplicated
-    public void updateMyConcerts(ArrayList<Integer> addedIndexList, ArrayList<String> deletedNameList) {
-        ArrayList<ArrayList<String>> myConcerts = getMyConcerts();
-
-        for (var index : addedIndexList) {
-            ArrayList<String> concert = getConcertByIndex(index);
-
-            concert.set(0, "true");
-
-            boolean existFlag = true;
-
-            for (var myConcert : myConcerts) {
-                if (myConcert.equals(concert)) {
-                    existFlag = false;
-                    break;
-                }
-            }
-
-            if (existFlag) {
-                myConcerts.add(concert);
-            }
-        }
-
-        for (var deletedConcertName : deletedNameList) {
-            for (int i=0;i<myConcerts.size();i++) {
-                if (myConcerts.get(i).get(1).equals(deletedConcertName)) {
-                    myConcerts.remove(i);
-                    break;
-                }
-            }
-        }
-
-        writeMyConcerts(myConcerts);
-    }
 
     public void writeMyConcerts(ArrayList<ArrayList<String>> mc) {
-        BufferedWriter myConcertBuffer = null;
-
-        try {
-            myConcertBuffer = Files.newBufferedWriter(Paths.get(getUserConcertsFilePath()), Charset.defaultCharset());
-        } catch (IOException e) {
-            System.exit(1);
-        }
-
-        for (var concert : mc) {
-            StringBuilder s = new StringBuilder();
-            for (int i = 0; i < concert.size(); i++) {
-                s.append(concert.get(i));
-                if (i != concert.size() - 1) {
-                    s.append(",");
-                }
-            }
-
-            try {
-                myConcertBuffer.write(s.toString());
-                myConcertBuffer.newLine();
-            } catch (IOException e) {
-                System.exit(1);
-            }
-        }
-
-        try {
-            myConcertBuffer.close();
-        } catch (IOException e) {
-            System.exit(1);
-        }
+        writeUserConcerts(this.getUserName(), mc);
     }
 
     public ArrayList<ArrayList<String>> getMyConcerts() {
@@ -199,11 +134,105 @@ public class UserReader {
         return myConcerts;
     }
 
-    public void deleteMyConcert(int index) {
-        ArrayList<ArrayList<String>> mc = getMyConcerts();
-        mc.remove(index);
+    public static void writeUserConcerts(String userName, ArrayList<ArrayList<String>> userConcerts) {
+        BufferedWriter userConcertBuffer = null;
 
-        writeMyConcerts(mc);
+        try {
+            userConcertBuffer = Files.newBufferedWriter(Paths.get(getUserConcertsFilePath(userName)), Charset.defaultCharset());
+        } catch (IOException e) {
+            System.exit(1);
+        }
+
+        for (var concert : userConcerts) {
+            StringBuilder s = new StringBuilder();
+            for (int i = 0; i < concert.size(); i++) {
+                s.append(concert.get(i));
+                if (i != concert.size() - 1) {
+                    s.append(",");
+                }
+            }
+
+            try {
+                userConcertBuffer.write(s.toString());
+                userConcertBuffer.newLine();
+            } catch (IOException e) {
+                System.exit(1);
+            }
+        }
+
+        try {
+            userConcertBuffer.close();
+        } catch (IOException e) {
+            System.exit(1);
+        }
+    }
+
+    public static void deleteConcertByName(String concertName) {
+        ArrayList<ArrayList<String>> allConcerts = getAllConcerts();
+        ArrayList<ArrayList<String>> retConcerts = new ArrayList<>();
+
+        for (var myConcert : allConcerts) {
+            if (!myConcert.get(1).equals(concertName)) {
+                retConcerts.add(myConcert);
+            }
+        }
+
+        writeBaseConcerts(retConcerts);
+
+        // search for users -> delete if the user has the concert
+        ArrayList<ArrayList<String>> allUsers = UserReader.getAllUsers();
+
+        try {
+            for (ArrayList<String> user : allUsers) {
+                String uname = user.get(NAME_INDEX);
+
+                var concerts = getUserConcerts(uname);
+                ArrayList<ArrayList<String>> retUserConcerts = new ArrayList<>();
+
+                for (ArrayList<String> concert : concerts) {
+                    if (!concertName.equals(concert.get(NAME_INDEX))) {
+                        retUserConcerts.add(concert);
+                    }
+                }
+
+                writeUserConcerts(uname, retConcerts);
+            }
+        } catch (NullPointerException e) {
+            System.exit(1);
+        }
+    }
+
+    public static void writeBaseConcerts(ArrayList<ArrayList<String>> concerts) {
+        BufferedWriter concertBuffer = null;
+
+        try {
+            concertBuffer = Files.newBufferedWriter(Paths.get(getFileNamePath("concerts.csv")), Charset.defaultCharset());
+        } catch (IOException e) {
+            System.exit(1);
+        }
+
+        for (var concert : concerts) {
+            StringBuilder s = new StringBuilder();
+            for (int i = 0; i < concert.size(); i++) {
+                s.append(concert.get(i));
+                if (i != concert.size() - 1) {
+                    s.append(",");
+                }
+            }
+
+            try {
+                concertBuffer.write(s.toString());
+                concertBuffer.newLine();
+            } catch (IOException e) {
+                System.exit(1);
+            }
+        }
+
+        try {
+            concertBuffer.close();
+        } catch (IOException e) {
+            System.exit(1);
+        }
     }
 
     private static String getUserConcertsFilePath(String userName) {
@@ -288,7 +317,7 @@ public class UserReader {
 
         ArrayList<String> allConcertsName = new ArrayList<String>();
 
-        for (int i = 0; i < allConcerts.size(); i++){
+        for (int i = 0; i < allConcerts.size(); i++) {
             ArrayList<String> concert = allConcerts.get(i);
             allConcertsName.add(concert.get(NAME_INDEX));
         }
@@ -296,12 +325,12 @@ public class UserReader {
         return allConcertsName;
     }
 
-    public static ArrayList<ArrayList<String>> getAllAdmins(){
+    public static ArrayList<ArrayList<String>> getAllAdmins() {
         List<String> rows = null;
 
-        try{
+        try {
             rows = Files.readAllLines(Paths.get(getFileNamePath("admin.csv")), Charset.defaultCharset());
-        }catch (IOException e) {
+        } catch (IOException e) {
             System.err.println(e.getMessage());
             System.out.println("Failed to read a admin file");
             System.exit(1);
@@ -352,7 +381,7 @@ public class UserReader {
         ArrayList<ArrayList<String>> allUsers = UserReader.getAllUsers();
         ArrayList<ArrayList<String>> retUsers = new ArrayList<>();
 
-        try{
+        try {
             for (ArrayList<String> user : allUsers) {
                 String uname = user.get(NAME_INDEX);
 
@@ -365,7 +394,7 @@ public class UserReader {
                     }
                 }
             }
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return null;
         }
         return retUsers;

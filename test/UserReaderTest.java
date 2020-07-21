@@ -20,13 +20,6 @@ class UserReaderTest {
     }
 
     @org.junit.jupiter.api.Test
-    void updateMyConcerts() {
-        ArrayList<String> newConcert = new ArrayList<String>(Arrays.asList("false", "Magical Mirai 2020", "Vocaloid", "2020/08/10", "Makuhari Messe", "5600", "100"));
-        UserReader ur = new UserReader("yyahata");
-        ur.updateMyConcerts(new ArrayList<Integer>(), new ArrayList<String>());
-    }
-
-    @org.junit.jupiter.api.Test
     void getMyConcerts() {
         UserReader ur = new UserReader("shatanaka");
 
@@ -37,9 +30,8 @@ class UserReaderTest {
     }
 
     @org.junit.jupiter.api.Test
-    void deleteMyConcert() {
-        UserReader ur = new UserReader("yyahata");
-        ur.deleteMyConcert(0);
+    void deleteConcertByName() {
+        UserReader.deleteConcertByName("Magical Mirai 2020");
     }
 
     @org.junit.jupiter.api.Test
