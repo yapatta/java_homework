@@ -7,11 +7,9 @@ import model.UserReader;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class CreateUserPanel extends JPanel implements ActionListener, Mediator {
+public class CreateUserPanel extends JPanel implements Mediator {
     public static int ALL_PANEL_WIDTH = 400;
     public static int WIDTH = 300;
     public static int PANEL_HEIGHT = 600;
@@ -97,7 +95,6 @@ public class CreateUserPanel extends JPanel implements ActionListener, Mediator 
 
     @Override
     public void colleagueChanged() {
-        // Create
         if (this.buttonOk.nowAction()) {
             ArrayList<String> newUser = new ArrayList<>();
 
@@ -112,6 +109,7 @@ public class CreateUserPanel extends JPanel implements ActionListener, Mediator 
                 UserReader.makeUser(newUser);
 
                 JOptionPane.showMessageDialog(this, "Created!", "info", JOptionPane.INFORMATION_MESSAGE);
+
                 this.mainFrame.setNextPanelName(MainFrame.AdminPanelName);
             }
         } else if (this.buttonBack.nowAction()) {
@@ -119,10 +117,6 @@ public class CreateUserPanel extends JPanel implements ActionListener, Mediator 
         }
 
         this.mainFrame.colleagueChanged();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
     }
 
     public void reload() {

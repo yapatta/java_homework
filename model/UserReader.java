@@ -259,6 +259,13 @@ public class UserReader {
         }
     }
 
+    public static void makeConcert(ArrayList<String> newConcert) {
+        newConcert.add(0, "false");
+        var allConcerts = getAllConcerts();
+        allConcerts.add(newConcert);
+        writeBaseConcerts(allConcerts);
+    }
+
     public static void writeBaseConcerts(ArrayList<ArrayList<String>> concerts) {
         BufferedWriter concertBuffer = null;
 

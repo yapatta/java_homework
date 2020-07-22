@@ -7,13 +7,11 @@ import model.UserReader;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Vector;
 
 
-public class AdminPanel extends JPanel implements ActionListener, Mediator {
+public class AdminPanel extends JPanel implements Mediator {
     public static int ALL_PANEL_WIDTH = 900;
     public static int PANEL_WIDTH = 800;
     public static int PANEL_HEIGHT = 1000;
@@ -29,6 +27,8 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
     private JTextArea resultTextArea;
     private JPanel searchConcertPanel;
     private JPanel searchUserPanel;
+
+    private Boolean reloadFlag = false;
     // private int numberOfReservationPerson;
     private final MainFrame mainFrame;
 
@@ -190,7 +190,7 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
 
             UserReader.deleteConcertByName(searchConcertName);
 
-            this.reload();
+            this.setReloadFlag();
         } else if (this.deleteUserButton.nowAction()) {
             var searchUserName = (String) comboUsers.getSelectedItem();
 
@@ -198,28 +198,29 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
 
             UserReader.deleteUserByName(searchUserName);
 
-            this.reload();
+            this.setReloadFlag();
         } else if (this.buttonLogout.nowAction()) {
             this.mainFrame.unsetUserReader();
             this.mainFrame.setNextPanelName(MainFrame.LoginPanelName);
         } else if (this.addNewUserButton.nowAction()) {
             this.mainFrame.setNextPanelName(MainFrame.CreateUserPanelName);
+            this.setReloadFlag();
         } else if (this.addNewConcertButton.nowAction()) {
             this.mainFrame.setNextPanelName(MainFrame.CreateConcertPanelName);
+            this.setReloadFlag();
         }
 
         this.mainFrame.colleagueChanged();
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-    }
-
     public void reload() {
-        loadComboConcerts();
-        loadComboUsers();
+        if (this.getReloadFlag()) {
+            loadComboConcerts();
+            loadComboUsers();
+            resultTextArea.setText("");
+        }
 
-        resultTextArea.setText("");
+        this.unsetReloadFlag();
     }
 
     public void loadComboConcerts() {
@@ -237,5 +238,17 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
         }
 
         comboUsers.setModel(new DefaultComboBoxModel<String>(allUserVector));
+    }
+
+    public void setReloadFlag() {
+        this.reloadFlag = true;
+    }
+
+    public void unsetReloadFlag() {
+        this.reloadFlag = false;
+    }
+
+    public boolean getReloadFlag() {
+        return this.reloadFlag;
     }
 }
