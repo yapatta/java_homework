@@ -40,6 +40,11 @@ class UserReaderTest {
     }
 
     @org.junit.jupiter.api.Test
+    void makeUser() {
+        UserReader.makeUser(new ArrayList<>(Arrays.asList("ytanaka", "ytanaka")));
+    }
+
+    @org.junit.jupiter.api.Test
     void isCorrectUser() {
         assertTrue(UserReader.isCorrectUser("yyahata", "yyahata"));
     }

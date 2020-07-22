@@ -149,10 +149,16 @@ public class UserReader {
         File file = new File(getUserConcertsFilePath(uname));
 
         if (file.exists()) {
-            if(!file.delete()) {
+            if (!file.delete()) {
                 System.err.println("Cannot delete file");
             }
         }
+    }
+
+    public static void makeUser(ArrayList<String> addedUser) {
+        var allUsers = getAllUsers();
+        allUsers.add(addedUser);
+        writeUsers(allUsers);
     }
 
     public static void writeUsers(ArrayList<ArrayList<String>> users) {
