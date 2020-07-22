@@ -29,9 +29,7 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
     private JTextArea resultTextArea;
     private JPanel searchConcertPanel;
     private JPanel searchUserPanel;
-    private String searchConcertName;
-    private String searchUserName;
-    private int numberOfReservationPerson;
+    // private int numberOfReservationPerson;
     private final MainFrame mainFrame;
 
     public AdminPanel(MainFrame mf, String title) {
@@ -156,7 +154,7 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
     @Override
     public void colleagueChanged() {
         if (this.searchConcertButton.nowAction()) {
-            searchConcertName = (String) comboConcerts.getSelectedItem();
+            var searchConcertName = (String) comboConcerts.getSelectedItem();
 
             System.out.println(searchConcertName);
 
@@ -172,7 +170,7 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
             }
 
         } else if (this.searchUserButton.nowAction()) {
-            searchUserName = (String) comboUsers.getSelectedItem();
+            var searchUserName = (String) comboUsers.getSelectedItem();
 
             System.out.println(searchUserName);
 
@@ -186,7 +184,7 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
             }
 
         } else if (this.deleteConcertButton.nowAction()) {
-            searchConcertName = (String) comboConcerts.getSelectedItem();
+            var searchConcertName = (String) comboConcerts.getSelectedItem();
 
             JOptionPane.showMessageDialog(this, "Are you sure to delete " + searchConcertName + " ?", "Warning", JOptionPane.WARNING_MESSAGE);
 
@@ -194,7 +192,7 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
 
             this.reload();
         } else if (this.deleteUserButton.nowAction()) {
-            searchUserName = (String) comboUsers.getSelectedItem();
+            var searchUserName = (String) comboUsers.getSelectedItem();
 
             JOptionPane.showMessageDialog(this, "Are you sure to delelte " + searchUserName + " ?", "Warning", JOptionPane.WARNING_MESSAGE);
 

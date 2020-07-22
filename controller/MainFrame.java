@@ -10,8 +10,8 @@ public class MainFrame extends JFrame implements Mediator {
     public static String ConcertsPanelName = "Concerts";
     public static String MyConcertsPanelName = "MyConcerts";
     public static String AdminPanelName = "Admin";
-    public static String CreateConcertPanelName = "Create Concert";
-    public static String CreateUserPanelName = "Create User";
+    public static String CreateConcertPanelName = "CreateConcert";
+    public static String CreateUserPanelName = "CreateUser";
     public static int WIDTH = 900;
     public static int HEIGHT = 1000;
 
@@ -97,6 +97,8 @@ public class MainFrame extends JFrame implements Mediator {
 
         this.setSize(CreateUserPanel.ALL_PANEL_WIDTH, CreateUserPanel.PANEL_HEIGHT);
         this.setLocationRelativeTo(null);
+
+        this.createUserPanel.reload();
 
         this.createUserPanel.setVisible(true);
     }

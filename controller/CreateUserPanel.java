@@ -1,6 +1,5 @@
 package controller;
 
-import components.Colleague;
 import components.ColleagueButton;
 import components.ColleagueTextField;
 import lib.GUILibrary;
@@ -10,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class CreateUserPanel extends JPanel implements ActionListener, Mediator {
     public static int ALL_PANEL_WIDTH = 400;
@@ -99,20 +99,34 @@ public class CreateUserPanel extends JPanel implements ActionListener, Mediator 
     public void colleagueChanged() {
         // Create
         if (this.buttonOk.nowAction()) {
-            // ********************************
-            // Create data in users.csv below
-            // ********************************
-            JOptionPane.showMessageDialog(this, "Created!", "info", JOptionPane.INFORMATION_MESSAGE);
-            this.mainFrame.setNextPanelName(MainFrame.AdminPanelName);
+            ArrayList<String> newUser = new ArrayList<>();
+
+            if (textUser.getText().equals("") || textUserId.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please input more than one character!!", "error", JOptionPane.ERROR_MESSAGE);
+
+                this.mainFrame.setNextPanelName(MainFrame.CreateUserPanelName);
+            } else {
+                newUser.add(textUser.getText());
+                newUser.add(textUserId.getText());
+
+                UserReader.makeUser(newUser);
+
+                JOptionPane.showMessageDialog(this, "Created!", "info", JOptionPane.INFORMATION_MESSAGE);
+                this.mainFrame.setNextPanelName(MainFrame.AdminPanelName);
+            }
         } else if (this.buttonBack.nowAction()) {
             this.mainFrame.setNextPanelName(MainFrame.AdminPanelName);
         }
 
         this.mainFrame.colleagueChanged();
-
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+    }
+
+    public void reload() {
+        this.textUser.setText("");
+        this.textUserId.setText("");
     }
 }
