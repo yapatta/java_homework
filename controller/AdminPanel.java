@@ -20,14 +20,19 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
     public static int PANEL_HEIGHT = 1000;
     private ColleagueButton searchConcertButton;
     private ColleagueButton searchUserButton;
+    private ColleagueButton deleteConcertButton;
+    private ColleagueButton deleteUserButton;
+    private ColleagueButton addNewConcertButton;
+    private ColleagueButton addNewUserButton;
     private ColleagueButton buttonLogout;
     private JComboBox<String> comboConcerts;
     private JComboBox<String> comboUsers;
     private JTextArea resultTextArea;
-    //private JPanel searchConcertPanel;
-    //private JPanel searchUserPanel;
+    private JPanel searchConcertPanel;
+    private JPanel searchUserPanel;
     private String searchConcertName;
     private String searchUserName;
+    private ArrayList<String> allConcertsList;
     private int numberOfReservationPerson;
     private MainFrame mainFrame;
 
@@ -51,31 +56,24 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
         labelPanel.add(subject);
 
         // search Concert Panel
-        JPanel searchConcertPanel = new JPanel();
+        searchConcertPanel = new JPanel();
         searchConcertPanel.setLayout(new GridLayout(1, 3));
         searchConcertPanel.setPreferredSize(new Dimension(PANEL_WIDTH / 2, 30));
 
         JLabel searchConcertLabel = new JLabel("Concert Information:");
         searchConcertLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        ArrayList<String> allConcertsList = UserReader.getAllConcertsName();
-        Vector<String> allConcertsVector = new Vector<String>();
-        for (int i = 0; i < allConcertsList.size(); i++) {
-            allConcertsVector.add(allConcertsList.get(i));
-        }
-        //searchConcertName = allConcertsList.get(0);
-        comboConcerts = new JComboBox<String>(allConcertsVector);
-        comboConcerts.setEditable(true);
-        //comboConcerts.addItemListener( new MyListSelect() );
-        comboConcerts.addActionListener(new MyListSelect());
+        loadComboConcerts();
+        searchConcertName = allConcertsList.get(0);
 
         searchConcertPanel.add(searchConcertLabel);
         searchConcertPanel.add(comboConcerts);
         searchConcertPanel.add(searchConcertButton);
+        searchConcertPanel.add(deleteConcertButton);
 
 
         // search User Panel
-        JPanel searchUserPanel = new JPanel();
+        searchUserPanel = new JPanel();
         searchUserPanel.setLayout(new GridLayout(1, 4));
         searchUserPanel.setPreferredSize(new Dimension(PANEL_WIDTH / 2, 30));
 
@@ -88,7 +86,8 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
             ArrayList<String> userlist = allUsersList.get(i);
             allUserVector.add(userlist.get(0));
         }
-        //searchConcertName = allUserVector.get(0);
+        searchConcertName = allUserVector.get(0);
+        System.out.println(searchConcertName);
         comboUsers = new JComboBox<String>(allUserVector);
         comboUsers.setEditable(true);
         //comboUsers.addItemListener( new MyListSelect() );
@@ -98,6 +97,7 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
         //userCombo.add(new JLabel("Select User:"));
         searchUserPanel.add(comboUsers);
         searchUserPanel.add(searchUserButton);
+        searchUserPanel.add(deleteUserButton);
 
         //Result or Edit Panel
         JPanel resultPanel = new JPanel();
@@ -106,6 +106,18 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
         resultTextArea = new JTextArea(10, 50);
         JScrollPane resultScroll = new JScrollPane(resultTextArea);
         resultScroll.setBorder(new TitledBorder("Result"));
+
+        //Create New Data Panel
+        JPanel createNewDataPanel = new JPanel();
+        createNewDataPanel.setLayout(new GridLayout(1, 3));
+        createNewDataPanel.setPreferredSize(new Dimension(PANEL_WIDTH / 2, 30));
+
+        JLabel createNewDataLabel = new JLabel("Create New Data:");
+        createNewDataLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        createNewDataPanel.add(createNewDataLabel);
+        createNewDataPanel.add(addNewConcertButton);
+        createNewDataPanel.add(addNewUserButton);
 
         //logout Panel
         JPanel logoutPanel = new JPanel();
@@ -119,6 +131,8 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
         this.add(searchUserPanel);
         add(GUILibrary.getHr(800, 0));
         this.add(resultScroll);
+        add(GUILibrary.getHr(800, 0));
+        this.add(createNewDataPanel);
         //####### temporary space for lugout button ######### //
         add(GUILibrary.getHr(800, 0));
         this.add(logoutPanel);
@@ -131,14 +145,26 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
     public void createColleagues() {
         searchConcertButton = new ColleagueButton("Show");
         searchUserButton = new ColleagueButton("Show");
+        deleteConcertButton = new ColleagueButton("Delete");
+        deleteUserButton = new ColleagueButton("Delete");
+        addNewConcertButton = new ColleagueButton("New Concert");
+        addNewUserButton = new ColleagueButton("New User");
         buttonLogout = new ColleagueButton("Logout");
 
         searchConcertButton.setMediator(this);
         searchUserButton.setMediator(this);
+        deleteConcertButton.setMediator(this);
+        deleteUserButton.setMediator(this);
+        addNewConcertButton.setMediator(this);
+        addNewUserButton.setMediator(this);
         buttonLogout.setMediator(this);
 
         searchConcertButton.addActionListener(searchConcertButton);
         searchUserButton.addActionListener(searchUserButton);
+        deleteConcertButton.addActionListener(deleteConcertButton);
+        deleteUserButton.addActionListener(deleteUserButton);
+        addNewConcertButton.addActionListener(addNewConcertButton);
+        addNewUserButton.addActionListener(addNewUserButton);
         buttonLogout.addActionListener(buttonLogout);
 
     }
@@ -159,8 +185,8 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
                 }
                 //System.out.println(resultUser); // User Name
                 //JOptionPane.showMessageDialog(this,resultUser,"Result",JOptionPane.INFORMATION_MESSAGE);
-
             }
+            reloadComboConcerts();
         } else if (this.searchUserButton.nowAction()) {
             ArrayList<ArrayList<String>> resultConcertsList = UserReader.getUserConcerts(searchUserName);
             ArrayList<String> resultConcert = new ArrayList<>();
@@ -176,9 +202,19 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
                 //System.out.println(resultConcert); // Concert Name
                 //JOptionPane.showMessageDialog(this,resultConcert,"Result",JOptionPane.INFORMATION_MESSAGE);
             }
+        } else if (this.deleteConcertButton.nowAction()) {
+            JOptionPane.showMessageDialog(this, "Are you sure to delete " + searchConcertName + " ?", "Warning", JOptionPane.WARNING_MESSAGE);
+            UserReader.deleteConcertByName(searchConcertName);
+        } else if (this.deleteUserButton.nowAction()) {
+            JOptionPane.showMessageDialog(this, "Are you sure to delelte " + searchUserName + " ?", "Warning", JOptionPane.WARNING_MESSAGE);
+            UserReader.deleteUserByName(searchUserName);
         } else if (this.buttonLogout.nowAction()) {
             this.mainFrame.unsetUserReader();
             this.mainFrame.setNextPanelName(MainFrame.LoginPanelName);
+        } else if (this.addNewUserButton.nowAction()) {
+            this.mainFrame.setNextPanelName(MainFrame.CreateUserPanelName);
+        } else if (this.addNewConcertButton.nowAction()) {
+            this.mainFrame.setNextPanelName(MainFrame.CreateConcertPanelName);
         }
 
         this.mainFrame.colleagueChanged();
@@ -186,6 +222,22 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+    }
+
+    public void reloadComboConcerts() {
+        loadComboConcerts();
+    }
+
+    public void loadComboConcerts() {
+        allConcertsList = UserReader.getAllConcertsName();
+        Vector<String> allConcertsVector = new Vector<String>();
+        for (int i = 0; i < allConcertsList.size(); i++) {
+            allConcertsVector.add(allConcertsList.get(i));
+        }
+        comboConcerts = new JComboBox<String>(allConcertsVector);
+        comboConcerts.setEditable(true);
+        //comboConcerts.addItemListener( new MyListSelect() );
+        comboConcerts.addActionListener(new MyListSelect());
     }
 
 
