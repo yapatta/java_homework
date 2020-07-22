@@ -1,6 +1,5 @@
 package controller;
 
-import components.Colleague;
 import components.ColleagueButton;
 import components.ColleagueTextField;
 import lib.GUILibrary;
@@ -8,20 +7,18 @@ import model.UserReader;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
-public class CreateUserPanel extends JPanel implements ActionListener, Mediator {
+public class CreateUserPanel extends JPanel implements ReloadPanel, Mediator {
     public static int ALL_PANEL_WIDTH = 400;
     public static int WIDTH = 300;
     public static int PANEL_HEIGHT = 600;
 
     private ColleagueTextField textUser;
     private ColleagueTextField textUserId;
-    private JPasswordField textPassWord;
     private ColleagueButton buttonOk;
     private ColleagueButton buttonBack;
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     public CreateUserPanel(MainFrame mf, String title) {
         this.mainFrame = mf;
@@ -54,8 +51,6 @@ public class CreateUserPanel extends JPanel implements ActionListener, Mediator 
         inputPanel.add(textUser);
         inputPanel.add(new JLabel("Member ID:"));
         inputPanel.add(textUserId);
-        //inputPanel.add(new JLabel("Pass Word:"));
-        //inputPanel.add(textPassWord);
 
         // JPanel for Buttons
         JPanel buttonsPanel = new JPanel();
@@ -72,13 +67,15 @@ public class CreateUserPanel extends JPanel implements ActionListener, Mediator 
         this.add(inputPanel);
         this.add(GUILibrary.getHr(WIDTH, 0));
         this.add(buttonsPanel);
-
     }
 
+    public void reload() {
+        this.textUser.setText("");
+        this.textUserId.setText("");
+    }
 
     @Override
     public void createColleagues() {
-
         textUser = new ColleagueTextField("", 10);
         textUserId = new ColleagueTextField("", 10);
 
@@ -92,27 +89,31 @@ public class CreateUserPanel extends JPanel implements ActionListener, Mediator 
 
         buttonOk.addActionListener(buttonOk);
         buttonBack.addActionListener(buttonBack);
-
     }
 
     @Override
     public void colleagueChanged() {
-        // Create
         if (this.buttonOk.nowAction()) {
-            // ********************************
-            // Create data in users.csv below
-            // ********************************
-            JOptionPane.showMessageDialog(this, "Created!", "info", JOptionPane.INFORMATION_MESSAGE);
-            this.mainFrame.setNextPanelName(MainFrame.AdminPanelName);
+            ArrayList<String> newUser = new ArrayList<>();
+
+            if (textUser.getText().equals("") || textUserId.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please input more than one character!!", "error", JOptionPane.ERROR_MESSAGE);
+
+                this.mainFrame.setNextPanelName(MainFrame.CreateUserPanelName);
+            } else {
+                newUser.add(textUser.getText());
+                newUser.add(textUserId.getText());
+
+                UserReader.makeUser(newUser);
+
+                JOptionPane.showMessageDialog(this, "Created!", "info", JOptionPane.INFORMATION_MESSAGE);
+
+                this.mainFrame.setNextPanelName(MainFrame.AdminPanelName);
+            }
         } else if (this.buttonBack.nowAction()) {
             this.mainFrame.setNextPanelName(MainFrame.AdminPanelName);
         }
 
         this.mainFrame.colleagueChanged();
-
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
     }
 }

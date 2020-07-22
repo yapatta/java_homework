@@ -8,11 +8,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class MyConcertsPanel extends JPanel implements ActionListener, Mediator {
+public class MyConcertsPanel extends JPanel implements ReloadPanel, Mediator {
     public static int ALL_PANEL_WIDTH = 900;
     public static int PANEL_WIDTH = 800;
     public static int PANEL_HEIGHT = 1000;
@@ -97,7 +95,6 @@ public class MyConcertsPanel extends JPanel implements ActionListener, Mediator 
 
         this.myConcertsTable.setModel(modeltable);
 
-
         buttonDelete.setMediator(this);
         buttonAllConcerts.setMediator(this);
         buttonLogout.setMediator(this);
@@ -110,7 +107,6 @@ public class MyConcertsPanel extends JPanel implements ActionListener, Mediator 
     public void colleagueChanged() {
         if (this.buttonDelete.nowAction()) {
             this.updateCheckedConcerts();
-            //this.mainFrame.setNextPanelName(MainFrame.ConcertsPanelName);
         } else if (this.buttonAllConcerts.nowAction()) {
             this.mainFrame.setNextPanelName(MainFrame.ConcertsPanelName);
         } else if (this.buttonLogout.nowAction()) {
@@ -120,11 +116,7 @@ public class MyConcertsPanel extends JPanel implements ActionListener, Mediator 
         this.mainFrame.colleagueChanged();
     }
 
-    public void actionPerformed(ActionEvent e) {
-
-    }
-
-    public void updateMyConcertsTable() {
+    private void updateMyConcertsTable() {
         DefaultTableModel modeltable = new DefaultTableModel(COLUMN_NAMES, 0) {
             public Class<?> getColumnClass(int columnIndex) {
                 if (columnIndex == 0) {
@@ -148,7 +140,7 @@ public class MyConcertsPanel extends JPanel implements ActionListener, Mediator 
         this.myConcertsTable.setModel(modeltable);
     }
 
-    public void updateCheckedConcerts() {
+    private void updateCheckedConcerts() {
         ArrayList<ArrayList<String>> addedConcerts = new ArrayList<>();
         for (int i = 0; i < this.myConcertsTable.getRowCount(); i++) {
             if (!Boolean.parseBoolean(this.myConcertsTable.getValueAt(i, 0).toString())) {
@@ -163,6 +155,4 @@ public class MyConcertsPanel extends JPanel implements ActionListener, Mediator 
 
         this.mainFrame.getUserReader().writeMyConcerts(addedConcerts);
     }
-
-
 }

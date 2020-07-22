@@ -3,7 +3,6 @@ package controller;
 import model.UserReader;
 
 import javax.swing.*;
-import java.util.zip.CRC32;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame implements Mediator {
@@ -11,10 +10,8 @@ public class MainFrame extends JFrame implements Mediator {
     public static String ConcertsPanelName = "Concerts";
     public static String MyConcertsPanelName = "MyConcerts";
     public static String AdminPanelName = "Admin";
-    public static String CreateConcertPanelName = "Create Concert";
-    public static String CreateUserPanelName = "Create User";
-    public static int WIDTH = 900;
-    public static int HEIGHT = 1000;
+    public static String CreateConcertPanelName = "CreateConcert";
+    public static String CreateUserPanelName = "CreateUser";
 
     // make several panels
     LoginPanel loginPanel;
@@ -57,6 +54,7 @@ public class MainFrame extends JFrame implements Mediator {
         this.setAllVisibleFalse();
 
         this.setSize(LoginPanel.ALL_PANEL_WIDTH, LoginPanel.PANEL_HEIGHT);
+
         this.setLocationRelativeTo(null);
 
         this.loginPanel.setVisible(true);
@@ -66,6 +64,7 @@ public class MainFrame extends JFrame implements Mediator {
         this.setAllVisibleFalse();
 
         this.setSize(ConcertsPanel.ALL_PANEL_WIDTH, ConcertsPanel.PANEL_HEIGHT);
+
         this.setLocationRelativeTo(null);
 
         this.concertsPanel.reload();
@@ -77,6 +76,7 @@ public class MainFrame extends JFrame implements Mediator {
         this.setAllVisibleFalse();
 
         this.setSize(ConcertsPanel.ALL_PANEL_WIDTH, ConcertsPanel.PANEL_HEIGHT);
+
         this.setLocationRelativeTo(null);
 
         this.myConcertsPanel.reload();
@@ -88,7 +88,10 @@ public class MainFrame extends JFrame implements Mediator {
         this.setAllVisibleFalse();
 
         this.setSize(AdminPanel.ALL_PANEL_WIDTH, AdminPanel.PANEL_HEIGHT);
+
         this.setLocationRelativeTo(null);
+
+        this.adminPanel.reload();
 
         this.adminPanel.setVisible(true);
     }
@@ -97,7 +100,10 @@ public class MainFrame extends JFrame implements Mediator {
         this.setAllVisibleFalse();
 
         this.setSize(CreateUserPanel.ALL_PANEL_WIDTH, CreateUserPanel.PANEL_HEIGHT);
+
         this.setLocationRelativeTo(null);
+
+        this.createUserPanel.reload();
 
         this.createUserPanel.setVisible(true);
     }
@@ -106,7 +112,10 @@ public class MainFrame extends JFrame implements Mediator {
         this.setAllVisibleFalse();
 
         this.setSize(CreateConcertPanel.ALL_PANEL_WIDTH, CreateConcertPanel.PANEL_HEIGHT);
+
         this.setLocationRelativeTo(null);
+
+        this.createConcertPanel.reload();
 
         this.createConcertPanel.setVisible(true);
     }
@@ -130,8 +139,8 @@ public class MainFrame extends JFrame implements Mediator {
     }
 
     public void colleagueChanged() {
-        // based on pasaed value, change view
-        // after login, covert MyConcerts
+        // Based on passed state, show view
+        // After login, covert MyConcerts
 
         if (this.getNextPanelName().equals(MyConcertsPanelName)) {
             this.showMyConcertsPanel();

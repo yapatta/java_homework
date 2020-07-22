@@ -7,14 +7,11 @@ import model.UserReader;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.Vector;
 
 
-public class AdminPanel extends JPanel implements ActionListener, Mediator {
+public class AdminPanel extends JPanel implements ReloadPanel, Mediator {
     public static int ALL_PANEL_WIDTH = 900;
     public static int PANEL_WIDTH = 800;
     public static int PANEL_HEIGHT = 1000;
@@ -25,16 +22,13 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
     private ColleagueButton addNewConcertButton;
     private ColleagueButton addNewUserButton;
     private ColleagueButton buttonLogout;
-    private JComboBox<String> comboConcerts;
-    private JComboBox<String> comboUsers;
-    private JTextArea resultTextArea;
-    private JPanel searchConcertPanel;
-    private JPanel searchUserPanel;
-    private String searchConcertName;
-    private String searchUserName;
-    private ArrayList<String> allConcertsList;
-    private int numberOfReservationPerson;
-    private MainFrame mainFrame;
+    private final JComboBox<String> comboConcerts;
+    private final JComboBox<String> comboUsers;
+    private final JTextArea resultTextArea;
+
+    private Boolean reloadFlag = false;
+    // private int numberOfReservationPerson;
+    private final MainFrame mainFrame;
 
     public AdminPanel(MainFrame mf, String title) {
         this.mainFrame = mf;
@@ -56,45 +50,34 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
         labelPanel.add(subject);
 
         // search Concert Panel
-        searchConcertPanel = new JPanel();
+        JPanel searchConcertPanel = new JPanel();
         searchConcertPanel.setLayout(new GridLayout(1, 3));
         searchConcertPanel.setPreferredSize(new Dimension(PANEL_WIDTH / 2, 30));
 
         JLabel searchConcertLabel = new JLabel("Concert Information:");
         searchConcertLabel.setHorizontalAlignment(JLabel.CENTER);
 
+        // JCombo Concerts
+        comboConcerts = new JComboBox<>();
         loadComboConcerts();
-        searchConcertName = allConcertsList.get(0);
 
         searchConcertPanel.add(searchConcertLabel);
         searchConcertPanel.add(comboConcerts);
         searchConcertPanel.add(searchConcertButton);
         searchConcertPanel.add(deleteConcertButton);
 
-
         // search User Panel
-        searchUserPanel = new JPanel();
+        JPanel searchUserPanel = new JPanel();
         searchUserPanel.setLayout(new GridLayout(1, 4));
         searchUserPanel.setPreferredSize(new Dimension(PANEL_WIDTH / 2, 30));
 
         JLabel searchUserLabel = new JLabel("User Information:");
         searchUserLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        ArrayList<ArrayList<String>> allUsersList = UserReader.getAllUsers();
-        Vector<String> allUserVector = new Vector<String>();
-        for (int i = 0; i < allUsersList.size(); i++) {
-            ArrayList<String> userlist = allUsersList.get(i);
-            allUserVector.add(userlist.get(0));
-        }
-        searchConcertName = allUserVector.get(0);
-        System.out.println(searchConcertName);
-        comboUsers = new JComboBox<String>(allUserVector);
-        comboUsers.setEditable(true);
-        //comboUsers.addItemListener( new MyListSelect() );
-        comboUsers.addActionListener(new MyListSelect());
+        comboUsers = new JComboBox<>();
+        loadComboUsers();
 
         searchUserPanel.add(searchUserLabel);
-        //userCombo.add(new JLabel("Select User:"));
         searchUserPanel.add(comboUsers);
         searchUserPanel.add(searchUserButton);
         searchUserPanel.add(deleteUserButton);
@@ -133,13 +116,19 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
         this.add(resultScroll);
         add(GUILibrary.getHr(800, 0));
         this.add(createNewDataPanel);
-        //####### temporary space for lugout button ######### //
         add(GUILibrary.getHr(800, 0));
         this.add(logoutPanel);
-
-
     }
 
+    public void reload() {
+        if (this.getReloadFlag()) {
+            loadComboConcerts();
+            loadComboUsers();
+            resultTextArea.setText("");
+        }
+
+        this.unsetReloadFlag();
+    }
 
     @Override
     public void createColleagues() {
@@ -166,96 +155,95 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
         addNewConcertButton.addActionListener(addNewConcertButton);
         addNewUserButton.addActionListener(addNewUserButton);
         buttonLogout.addActionListener(buttonLogout);
-
     }
 
     @Override
     public void colleagueChanged() {
         if (this.searchConcertButton.nowAction()) {
+            var searchConcertName = (String) comboConcerts.getSelectedItem();
+
             ArrayList<ArrayList<String>> resultUsersList = UserReader.getSpecificConcerts(searchConcertName);
-            ArrayList<String> resultUser = new ArrayList<>();
-            if (resultUsersList == null) {
-                JOptionPane.showMessageDialog(this, "Select Concert Again", "Error!", JOptionPane.ERROR_MESSAGE);
-            } else {
-                resultTextArea.setText("");
-                for (int i = 0; i < resultUsersList.size(); i++) {
-                    resultUser.add((resultUsersList.get(i)).get(0));
-                    resultTextArea.append(resultUser.get(i));
+
+            resultTextArea.setText("");
+
+            if (resultUsersList != null) {
+                for (ArrayList<String> strings : resultUsersList) {
+                    resultTextArea.append(strings.get(0));
                     resultTextArea.append("\n");
                 }
-                //System.out.println(resultUser); // User Name
-                //JOptionPane.showMessageDialog(this,resultUser,"Result",JOptionPane.INFORMATION_MESSAGE);
             }
-            reloadComboConcerts();
+
         } else if (this.searchUserButton.nowAction()) {
+            var searchUserName = (String) comboUsers.getSelectedItem();
+
             ArrayList<ArrayList<String>> resultConcertsList = UserReader.getUserConcerts(searchUserName);
-            ArrayList<String> resultConcert = new ArrayList<>();
-            if (resultConcertsList.size() == 0) {
-                JOptionPane.showMessageDialog(this, "Select User Again", "Error!", JOptionPane.ERROR_MESSAGE);
-            } else {
-                resultTextArea.setText("");
-                for (int i = 0; i < resultConcertsList.size(); i++) {
-                    resultConcert.add((resultConcertsList.get(i)).get(1));
-                    resultTextArea.append(resultConcert.get(i));
-                    resultTextArea.append("\n");
-                }
-                //System.out.println(resultConcert); // Concert Name
-                //JOptionPane.showMessageDialog(this,resultConcert,"Result",JOptionPane.INFORMATION_MESSAGE);
+
+            resultTextArea.setText("");
+
+            for (ArrayList<String> strings : resultConcertsList) {
+                resultTextArea.append(strings.get(1));
+                resultTextArea.append("\n");
             }
+
         } else if (this.deleteConcertButton.nowAction()) {
-            JOptionPane.showMessageDialog(this, "Are you sure to delete " + searchConcertName + " ?", "Warning", JOptionPane.WARNING_MESSAGE);
+            var searchConcertName = (String) comboConcerts.getSelectedItem();
+
+            JOptionPane.showMessageDialog(this, "Deleted " + searchConcertName + " !", "Info", JOptionPane.INFORMATION_MESSAGE);
+
             UserReader.deleteConcertByName(searchConcertName);
+
+            this.setReloadFlag();
         } else if (this.deleteUserButton.nowAction()) {
-            JOptionPane.showMessageDialog(this, "Are you sure to delelte " + searchUserName + " ?", "Warning", JOptionPane.WARNING_MESSAGE);
+            var searchUserName = (String) comboUsers.getSelectedItem();
+
+            JOptionPane.showMessageDialog(this, "Deleted " + searchUserName + " !", "Info", JOptionPane.INFORMATION_MESSAGE);
+
             UserReader.deleteUserByName(searchUserName);
+
+            this.setReloadFlag();
         } else if (this.buttonLogout.nowAction()) {
             this.mainFrame.unsetUserReader();
+
             this.mainFrame.setNextPanelName(MainFrame.LoginPanelName);
         } else if (this.addNewUserButton.nowAction()) {
             this.mainFrame.setNextPanelName(MainFrame.CreateUserPanelName);
+
+            this.setReloadFlag();
         } else if (this.addNewConcertButton.nowAction()) {
             this.mainFrame.setNextPanelName(MainFrame.CreateConcertPanelName);
+
+            this.setReloadFlag();
         }
 
         this.mainFrame.colleagueChanged();
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+    private void loadComboConcerts() {
+        Vector<String> allConcertsVector = new Vector<>(UserReader.getAllConcertsName());
+
+        comboConcerts.setModel(new DefaultComboBoxModel<String>(allConcertsVector));
     }
 
-    public void reloadComboConcerts() {
-        loadComboConcerts();
+    private void loadComboUsers() {
+        ArrayList<ArrayList<String>> allUsersList = UserReader.getAllUsers();
+        Vector<String> allUserVector = new Vector<String>();
+
+        for (ArrayList<String> userList : allUsersList) {
+            allUserVector.add(userList.get(0));
+        }
+
+        comboUsers.setModel(new DefaultComboBoxModel<String>(allUserVector));
     }
 
-    public void loadComboConcerts() {
-        allConcertsList = UserReader.getAllConcertsName();
-        Vector<String> allConcertsVector = new Vector<String>();
-        for (int i = 0; i < allConcertsList.size(); i++) {
-            allConcertsVector.add(allConcertsList.get(i));
-        }
-        comboConcerts = new JComboBox<String>(allConcertsVector);
-        comboConcerts.setEditable(true);
-        //comboConcerts.addItemListener( new MyListSelect() );
-        comboConcerts.addActionListener(new MyListSelect());
+    public void setReloadFlag() {
+        this.reloadFlag = true;
     }
 
+    public void unsetReloadFlag() {
+        this.reloadFlag = false;
+    }
 
-    class MyListSelect implements ActionListener, EventListener {
-        /*@Override
-        public void itemStateChanged(ItemEvent e) {
-        }
-        */
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == comboConcerts) {
-                searchConcertName = (String) comboConcerts.getSelectedItem();
-                System.out.println("Now Concert Name:" + searchConcertName);
-            } else if (e.getSource() == comboUsers) {
-                searchUserName = (String) comboUsers.getSelectedItem();
-                System.out.println("Now User Name:" + searchUserName);
-            }
-        }
+    public boolean getReloadFlag() {
+        return this.reloadFlag;
     }
 }

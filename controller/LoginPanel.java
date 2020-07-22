@@ -1,6 +1,5 @@
 package controller;
 
-import components.Colleague;
 import components.ColleagueButton;
 import components.ColleagueTextField;
 import lib.GUILibrary;
@@ -18,10 +17,9 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
 
     private ColleagueTextField textUser;
     private ColleagueTextField textUserId;
-    private JPasswordField textPassWord;
     private ColleagueButton buttonOk;
     private JButton exitButton;
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     public LoginPanel(MainFrame mf, String title) {
         this.mainFrame = mf;
@@ -61,7 +59,7 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setPreferredSize(new Dimension(WIDTH, 100));
 
-        GridLayout buttonLayout = new GridLayout(0,1);
+        GridLayout buttonLayout = new GridLayout(0, 1);
         buttonLayout.setVgap(20);
         buttonsPanel.setLayout(buttonLayout);
         buttonsPanel.add(buttonOk);
@@ -98,16 +96,14 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
 
     public void colleagueChanged() {
         // Login
-        //String passWordStr = new String(textPassWord.getPassword());
-        if (UserReader.isCorrectUser(textUser.getText(), textUserId.getText())) {
-            // if use Password field, make this line Changed: testUser.getText() -> textUserId.getText()
-            this.mainFrame.setUserReader(textUser.getText());
-            this.mainFrame.setNextPanelName(MainFrame.MyConcertsPanelName);
-            this.mainFrame.colleagueChanged();
-        } else if (UserReader.isCorrectAdmin(textUser.getText(), textUserId.getText())){
+        if (UserReader.isCorrectAdmin(textUser.getText(), textUserId.getText())) {
             JOptionPane.showMessageDialog(this, "You are Admin", "info", JOptionPane.INFORMATION_MESSAGE);
             this.mainFrame.setUserReader(textUser.getText());
             this.mainFrame.setNextPanelName(MainFrame.AdminPanelName);
+            this.mainFrame.colleagueChanged();
+        } else if (UserReader.isCorrectUser(textUser.getText(), textUserId.getText())) {
+            this.mainFrame.setUserReader(textUser.getText());
+            this.mainFrame.setNextPanelName(MainFrame.MyConcertsPanelName);
             this.mainFrame.colleagueChanged();
         } else {
             JOptionPane.showMessageDialog(this, "Login Failure", "Warn", JOptionPane.WARNING_MESSAGE);
@@ -115,7 +111,7 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == exitButton){
+        if (e.getSource() == exitButton) {
             System.exit(0);
         }
     }

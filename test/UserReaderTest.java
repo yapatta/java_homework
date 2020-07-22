@@ -40,6 +40,16 @@ class UserReaderTest {
     }
 
     @org.junit.jupiter.api.Test
+    void makeUser() {
+        UserReader.makeUser(new ArrayList<>(Arrays.asList("ytanaka", "ytanaka")));
+    }
+
+    @org.junit.jupiter.api.Test
+    void makeConcert() {
+        UserReader.makeConcert(new ArrayList<>(Arrays.asList("Yorushika Live 2020", "Jazz", "2020/09/10", "Hiyoshi Campus", "12000", "500")));
+    }
+
+    @org.junit.jupiter.api.Test
     void isCorrectUser() {
         assertTrue(UserReader.isCorrectUser("yyahata", "yyahata"));
     }

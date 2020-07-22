@@ -1,6 +1,5 @@
 package controller;
 
-import components.Colleague;
 import components.ColleagueButton;
 import components.ColleagueTextField;
 import lib.GUILibrary;
@@ -8,10 +7,9 @@ import model.UserReader;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
-public class CreateConcertPanel extends JPanel implements ActionListener, Mediator {
+public class CreateConcertPanel extends JPanel implements ReloadPanel, Mediator {
     public static int ALL_PANEL_WIDTH = 400;
     public static int WIDTH = 300;
     public static int PANEL_HEIGHT = 600;
@@ -24,7 +22,7 @@ public class CreateConcertPanel extends JPanel implements ActionListener, Mediat
     private ColleagueTextField textConcertCapacity;
     private ColleagueButton buttonOk;
     private ColleagueButton buttonBack;
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     public CreateConcertPanel(MainFrame mf, String title) {
         this.mainFrame = mf;
@@ -82,9 +80,16 @@ public class CreateConcertPanel extends JPanel implements ActionListener, Mediat
         this.add(inputPanel);
         this.add(GUILibrary.getHr(WIDTH, 0));
         this.add(buttonsPanel);
-
     }
 
+    public void reload() {
+        textConcertTitle.setText("");
+        textConcertGenre.setText("");
+        textConcertDay.setText("");
+        textConcertPlace.setText("");
+        textConcertFee.setText("");
+        textConcertCapacity.setText("");
+    }
 
     @Override
     public void createColleagues() {
@@ -103,28 +108,41 @@ public class CreateConcertPanel extends JPanel implements ActionListener, Mediat
 
         buttonOk.addActionListener(buttonOk);
         buttonBack.addActionListener(buttonBack);
-
     }
 
     @Override
     public void colleagueChanged() {
-        // Create
         if (this.buttonOk.nowAction()) {
-            // ********************************
-            // Create data in concerts.csv below
-            // ********************************
-            JOptionPane.showMessageDialog(this, "Created!", "info", JOptionPane.INFORMATION_MESSAGE);
-            this.mainFrame.setNextPanelName(MainFrame.AdminPanelName);
+            ArrayList<String> newConcert = new ArrayList<>();
+
+            if (textConcertTitle.getText().equals("")
+                    || textConcertGenre.getText().equals("")
+                    || textConcertDay.getText().equals("")
+                    || textConcertPlace.getText().equals("")
+                    || textConcertFee.getText().equals("")
+                    || textConcertCapacity.getText().equals("")
+            ) {
+                JOptionPane.showMessageDialog(this, "Please input more than one character!!", "error", JOptionPane.ERROR_MESSAGE);
+
+                this.mainFrame.setNextPanelName(MainFrame.CreateConcertPanelName);
+            } else {
+                newConcert.add(textConcertTitle.getText());
+                newConcert.add(textConcertGenre.getText());
+                newConcert.add(textConcertDay.getText());
+                newConcert.add(textConcertPlace.getText());
+                newConcert.add(textConcertFee.getText());
+                newConcert.add(textConcertCapacity.getText());
+
+                UserReader.makeConcert(newConcert);
+
+                JOptionPane.showMessageDialog(this, "Created!", "info", JOptionPane.INFORMATION_MESSAGE);
+
+                this.mainFrame.setNextPanelName(MainFrame.AdminPanelName);
+            }
         } else if (this.buttonBack.nowAction()) {
             this.mainFrame.setNextPanelName(MainFrame.AdminPanelName);
         }
 
         this.mainFrame.colleagueChanged();
-
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
     }
 }
