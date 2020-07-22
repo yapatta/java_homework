@@ -163,6 +163,4 @@ public class MyConcertsPanel extends JPanel implements ActionListener, Mediator 
 
         this.mainFrame.getUserReader().writeMyConcerts(addedConcerts);
     }
-
-
 }

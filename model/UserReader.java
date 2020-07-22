@@ -242,24 +242,20 @@ public class UserReader {
         // search for users -> delete if the user has the concert
         ArrayList<ArrayList<String>> allUsers = UserReader.getAllUsers();
 
-        try {
-            for (ArrayList<String> user : allUsers) {
-                String uname = user.get(NAME_INDEX);
+        for (ArrayList<String> user : allUsers) {
+            String uname = user.get(NAME_INDEX);
 
-                var concerts = getUserConcerts(uname);
-                ArrayList<ArrayList<String>> retUserConcerts = new ArrayList<>();
+            var concerts = getUserConcerts(uname);
+            ArrayList<ArrayList<String>> retUserConcerts = new ArrayList<>();
 
-                for (ArrayList<String> concert : concerts) {
-                    if (!concertName.equals(concert.get(NAME_INDEX))) {
-                        concert.set(0, "true");
-                        retUserConcerts.add(concert);
-                    }
+            for (ArrayList<String> concert : concerts) {
+                if (!concert.get(NAME_INDEX).equals(concertName)) {
+                    concert.set(0, "true");
+                    retUserConcerts.add(concert);
                 }
-
-                writeUserConcerts(uname, retUserConcerts);
             }
-        } catch (NullPointerException e) {
-            System.exit(1);
+
+            writeUserConcerts(uname, retUserConcerts);
         }
     }
 

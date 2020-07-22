@@ -3,7 +3,6 @@ package controller;
 import model.UserReader;
 
 import javax.swing.*;
-import java.util.zip.CRC32;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame implements Mediator {

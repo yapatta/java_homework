@@ -32,7 +32,7 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
     private String searchConcertName;
     private String searchUserName;
     private int numberOfReservationPerson;
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     public AdminPanel(MainFrame mf, String title) {
         this.mainFrame = mf;
@@ -61,7 +61,8 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
         JLabel searchConcertLabel = new JLabel("Concert Information:");
         searchConcertLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        // JCombo
+        // JCombo Concerts
+        comboConcerts = new JComboBox<>();
         loadComboConcerts();
 
         searchConcertPanel.add(searchConcertLabel);
@@ -78,6 +79,7 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
         JLabel searchUserLabel = new JLabel("User Information:");
         searchUserLabel.setHorizontalAlignment(JLabel.CENTER);
 
+        comboUsers = new JComboBox<>();
         loadComboUsers();
 
         searchUserPanel.add(searchUserLabel);
@@ -184,11 +186,21 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
             }
 
         } else if (this.deleteConcertButton.nowAction()) {
+            searchConcertName = (String) comboConcerts.getSelectedItem();
+
             JOptionPane.showMessageDialog(this, "Are you sure to delete " + searchConcertName + " ?", "Warning", JOptionPane.WARNING_MESSAGE);
+
             UserReader.deleteConcertByName(searchConcertName);
+
+            this.reload();
         } else if (this.deleteUserButton.nowAction()) {
+            searchUserName = (String) comboUsers.getSelectedItem();
+
             JOptionPane.showMessageDialog(this, "Are you sure to delelte " + searchUserName + " ?", "Warning", JOptionPane.WARNING_MESSAGE);
+
             UserReader.deleteUserByName(searchUserName);
+
+            this.reload();
         } else if (this.buttonLogout.nowAction()) {
             this.mainFrame.unsetUserReader();
             this.mainFrame.setNextPanelName(MainFrame.LoginPanelName);
@@ -205,15 +217,17 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
     public void actionPerformed(ActionEvent e) {
     }
 
-    public void reloadComboConcerts() {
+    public void reload() {
         loadComboConcerts();
+        loadComboUsers();
+
+        resultTextArea.setText("");
     }
 
     public void loadComboConcerts() {
         Vector<String> allConcertsVector = new Vector<>(UserReader.getAllConcertsName());
 
-        comboConcerts = new JComboBox<String>(allConcertsVector);
-        comboConcerts.setEditable(false);
+        comboConcerts.setModel(new DefaultComboBoxModel<String>(allConcertsVector));
     }
 
     public void loadComboUsers() {
@@ -224,7 +238,6 @@ public class AdminPanel extends JPanel implements ActionListener, Mediator {
             allUserVector.add(userList.get(0));
         }
 
-        comboUsers = new JComboBox<String>(allUserVector);
-        comboUsers.setEditable(false);
+        comboUsers.setModel(new DefaultComboBoxModel<String>(allUserVector));
     }
 }
