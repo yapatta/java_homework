@@ -7,10 +7,9 @@ import model.UserReader;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
-public class LoginPanel extends JPanel implements ActionListener, Mediator {
+public class CreateUserPanel extends JPanel implements ReloadPanel, Mediator {
     public static int ALL_PANEL_WIDTH = 400;
     public static int WIDTH = 300;
     public static int PANEL_HEIGHT = 600;
@@ -18,10 +17,10 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
     private ColleagueTextField textUser;
     private ColleagueTextField textUserId;
     private ColleagueButton buttonOk;
-    private JButton exitButton;
+    private ColleagueButton buttonBack;
     private final MainFrame mainFrame;
 
-    public LoginPanel(MainFrame mf, String title) {
+    public CreateUserPanel(MainFrame mf, String title) {
         this.mainFrame = mf;
         this.setName(title);
 
@@ -31,7 +30,7 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
 
         this.createColleagues();
 
-        // JPanel for Main Message
+        //JPanel for Main Message
         JPanel spacePanel = new JPanel();
         spacePanel.setLayout(new GridLayout(1, 1));
         spacePanel.setPreferredSize(new Dimension(WIDTH, 100));
@@ -52,8 +51,6 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
         inputPanel.add(textUser);
         inputPanel.add(new JLabel("Member ID:"));
         inputPanel.add(textUserId);
-        //inputPanel.add(new JLabel("Pass Word:"));
-        //inputPanel.add(textPassWord);
 
         // JPanel for Buttons
         JPanel buttonsPanel = new JPanel();
@@ -63,56 +60,60 @@ public class LoginPanel extends JPanel implements ActionListener, Mediator {
         buttonLayout.setVgap(20);
         buttonsPanel.setLayout(buttonLayout);
         buttonsPanel.add(buttonOk);
-        buttonsPanel.add(exitButton);
+        buttonsPanel.add(buttonBack);
 
         this.add(spacePanel);
         this.add(GUILibrary.getHr(WIDTH, 0));
         this.add(inputPanel);
         this.add(GUILibrary.getHr(WIDTH, 0));
         this.add(buttonsPanel);
-
     }
 
-    public void createColleagues() {
+    public void reload() {
+        this.textUser.setText("");
+        this.textUserId.setText("");
+    }
 
+    @Override
+    public void createColleagues() {
         textUser = new ColleagueTextField("", 10);
         textUserId = new ColleagueTextField("", 10);
-        //textUserId = new JPasswordField();
-        //textUserId.setEchoChar('*');
-        //textPassWord = new JPasswordField();
-        //textPassWord.setEchoChar('*');
 
-        buttonOk = new ColleagueButton("Login");
-
-        exitButton = new JButton("Exit");
-        exitButton.addActionListener(this);
+        buttonOk = new ColleagueButton("Register");
+        buttonBack = new ColleagueButton("Back");
 
         textUser.setMediator(this);
         textUserId.setMediator(this);
         buttonOk.setMediator(this);
+        buttonBack.setMediator(this);
 
         buttonOk.addActionListener(buttonOk);
+        buttonBack.addActionListener(buttonBack);
     }
 
+    @Override
     public void colleagueChanged() {
-        // Login
-        if (UserReader.isCorrectAdmin(textUser.getText(), textUserId.getText())) {
-            JOptionPane.showMessageDialog(this, "You are Admin", "info", JOptionPane.INFORMATION_MESSAGE);
-            this.mainFrame.setUserReader(textUser.getText());
-            this.mainFrame.setNextPanelName(MainFrame.AdminPanelName);
-            this.mainFrame.colleagueChanged();
-        } else if (UserReader.isCorrectUser(textUser.getText(), textUserId.getText())) {
-            this.mainFrame.setUserReader(textUser.getText());
-            this.mainFrame.setNextPanelName(MainFrame.MyConcertsPanelName);
-            this.mainFrame.colleagueChanged();
-        } else {
-            JOptionPane.showMessageDialog(this, "Login Failure", "Warn", JOptionPane.WARNING_MESSAGE);
-        }
-    }
+        if (this.buttonOk.nowAction()) {
+            ArrayList<String> newUser = new ArrayList<>();
 
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == exitButton) {
-            System.exit(0);
+            if (textUser.getText().equals("") || textUserId.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please input more than one character!!", "error", JOptionPane.ERROR_MESSAGE);
+
+                this.mainFrame.setNextPanelName(MainFrame.CreateUserPanelName);
+            } else {
+                newUser.add(textUser.getText());
+                newUser.add(textUserId.getText());
+
+                UserReader.makeUser(newUser);
+
+                JOptionPane.showMessageDialog(this, "Created!", "info", JOptionPane.INFORMATION_MESSAGE);
+
+                this.mainFrame.setNextPanelName(MainFrame.AdminPanelName);
+            }
+        } else if (this.buttonBack.nowAction()) {
+            this.mainFrame.setNextPanelName(MainFrame.AdminPanelName);
         }
+
+        this.mainFrame.colleagueChanged();
     }
 }

@@ -149,10 +149,16 @@ public class UserReader {
         File file = new File(getUserConcertsFilePath(uname));
 
         if (file.exists()) {
-            if(!file.delete()) {
+            if (!file.delete()) {
                 System.err.println("Cannot delete file");
             }
         }
+    }
+
+    public static void makeUser(ArrayList<String> addedUser) {
+        var allUsers = getAllUsers();
+        allUsers.add(addedUser);
+        writeUsers(allUsers);
     }
 
     public static void writeUsers(ArrayList<ArrayList<String>> users) {
@@ -236,25 +242,28 @@ public class UserReader {
         // search for users -> delete if the user has the concert
         ArrayList<ArrayList<String>> allUsers = UserReader.getAllUsers();
 
-        try {
-            for (ArrayList<String> user : allUsers) {
-                String uname = user.get(NAME_INDEX);
+        for (ArrayList<String> user : allUsers) {
+            String uname = user.get(NAME_INDEX);
 
-                var concerts = getUserConcerts(uname);
-                ArrayList<ArrayList<String>> retUserConcerts = new ArrayList<>();
+            var concerts = getUserConcerts(uname);
+            ArrayList<ArrayList<String>> retUserConcerts = new ArrayList<>();
 
-                for (ArrayList<String> concert : concerts) {
-                    if (!concertName.equals(concert.get(NAME_INDEX))) {
-                        concert.set(0, "true");
-                        retUserConcerts.add(concert);
-                    }
+            for (ArrayList<String> concert : concerts) {
+                if (!concert.get(NAME_INDEX).equals(concertName)) {
+                    concert.set(0, "true");
+                    retUserConcerts.add(concert);
                 }
-
-                writeUserConcerts(uname, retUserConcerts);
             }
-        } catch (NullPointerException e) {
-            System.exit(1);
+
+            writeUserConcerts(uname, retUserConcerts);
         }
+    }
+
+    public static void makeConcert(ArrayList<String> newConcert) {
+        newConcert.add(0, "false");
+        var allConcerts = getAllConcerts();
+        allConcerts.add(newConcert);
+        writeBaseConcerts(allConcerts);
     }
 
     public static void writeBaseConcerts(ArrayList<ArrayList<String>> concerts) {
@@ -473,15 +482,5 @@ public class UserReader {
         }
 
         return retConcerts;
-    }
-
-    public static ArrayList<String> getConcertByIndex(int index) {
-        var allConcerts = getAllConcerts();
-        for (int i = 0; i < allConcerts.size(); i++) {
-            if (index == i) {
-                return allConcerts.get(i);
-            }
-        }
-        return new ArrayList<String>();
     }
 }
