@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class CreateConcertPanel extends JPanel implements Mediator {
+public class CreateConcertPanel extends JPanel implements ReloadPanel, Mediator {
     public static int ALL_PANEL_WIDTH = 400;
     public static int WIDTH = 300;
     public static int PANEL_HEIGHT = 600;
@@ -22,7 +22,7 @@ public class CreateConcertPanel extends JPanel implements Mediator {
     private ColleagueTextField textConcertCapacity;
     private ColleagueButton buttonOk;
     private ColleagueButton buttonBack;
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     public CreateConcertPanel(MainFrame mf, String title) {
         this.mainFrame = mf;
@@ -80,9 +80,16 @@ public class CreateConcertPanel extends JPanel implements Mediator {
         this.add(inputPanel);
         this.add(GUILibrary.getHr(WIDTH, 0));
         this.add(buttonsPanel);
-
     }
 
+    public void reload() {
+        textConcertTitle.setText("");
+        textConcertGenre.setText("");
+        textConcertDay.setText("");
+        textConcertPlace.setText("");
+        textConcertFee.setText("");
+        textConcertCapacity.setText("");
+    }
 
     @Override
     public void createColleagues() {
@@ -101,7 +108,6 @@ public class CreateConcertPanel extends JPanel implements Mediator {
 
         buttonOk.addActionListener(buttonOk);
         buttonBack.addActionListener(buttonBack);
-
     }
 
     @Override
@@ -138,14 +144,5 @@ public class CreateConcertPanel extends JPanel implements Mediator {
         }
 
         this.mainFrame.colleagueChanged();
-    }
-
-    public void reload() {
-        textConcertTitle.setText("");
-        textConcertGenre.setText("");
-        textConcertDay.setText("");
-        textConcertPlace.setText("");
-        textConcertFee.setText("");
-        textConcertCapacity.setText("");
     }
 }

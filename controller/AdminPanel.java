@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 
-public class AdminPanel extends JPanel implements Mediator {
+public class AdminPanel extends JPanel implements ReloadPanel, Mediator {
     public static int ALL_PANEL_WIDTH = 900;
     public static int PANEL_WIDTH = 800;
     public static int PANEL_HEIGHT = 1000;
@@ -22,11 +22,9 @@ public class AdminPanel extends JPanel implements Mediator {
     private ColleagueButton addNewConcertButton;
     private ColleagueButton addNewUserButton;
     private ColleagueButton buttonLogout;
-    private JComboBox<String> comboConcerts;
-    private JComboBox<String> comboUsers;
-    private JTextArea resultTextArea;
-    private JPanel searchConcertPanel;
-    private JPanel searchUserPanel;
+    private final JComboBox<String> comboConcerts;
+    private final JComboBox<String> comboUsers;
+    private final JTextArea resultTextArea;
 
     private Boolean reloadFlag = false;
     // private int numberOfReservationPerson;
@@ -52,7 +50,7 @@ public class AdminPanel extends JPanel implements Mediator {
         labelPanel.add(subject);
 
         // search Concert Panel
-        searchConcertPanel = new JPanel();
+        JPanel searchConcertPanel = new JPanel();
         searchConcertPanel.setLayout(new GridLayout(1, 3));
         searchConcertPanel.setPreferredSize(new Dimension(PANEL_WIDTH / 2, 30));
 
@@ -68,9 +66,8 @@ public class AdminPanel extends JPanel implements Mediator {
         searchConcertPanel.add(searchConcertButton);
         searchConcertPanel.add(deleteConcertButton);
 
-
         // search User Panel
-        searchUserPanel = new JPanel();
+        JPanel searchUserPanel = new JPanel();
         searchUserPanel.setLayout(new GridLayout(1, 4));
         searchUserPanel.setPreferredSize(new Dimension(PANEL_WIDTH / 2, 30));
 
@@ -123,6 +120,15 @@ public class AdminPanel extends JPanel implements Mediator {
         this.add(logoutPanel);
     }
 
+    public void reload() {
+        if (this.getReloadFlag()) {
+            loadComboConcerts();
+            loadComboUsers();
+            resultTextArea.setText("");
+        }
+
+        this.unsetReloadFlag();
+    }
 
     @Override
     public void createColleagues() {
@@ -156,8 +162,6 @@ public class AdminPanel extends JPanel implements Mediator {
         if (this.searchConcertButton.nowAction()) {
             var searchConcertName = (String) comboConcerts.getSelectedItem();
 
-            System.out.println(searchConcertName);
-
             ArrayList<ArrayList<String>> resultUsersList = UserReader.getSpecificConcerts(searchConcertName);
 
             resultTextArea.setText("");
@@ -172,8 +176,6 @@ public class AdminPanel extends JPanel implements Mediator {
         } else if (this.searchUserButton.nowAction()) {
             var searchUserName = (String) comboUsers.getSelectedItem();
 
-            System.out.println(searchUserName);
-
             ArrayList<ArrayList<String>> resultConcertsList = UserReader.getUserConcerts(searchUserName);
 
             resultTextArea.setText("");
@@ -186,7 +188,7 @@ public class AdminPanel extends JPanel implements Mediator {
         } else if (this.deleteConcertButton.nowAction()) {
             var searchConcertName = (String) comboConcerts.getSelectedItem();
 
-            JOptionPane.showMessageDialog(this, "Are you sure to delete " + searchConcertName + " ?", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Deleted " + searchConcertName + " !", "Info", JOptionPane.INFORMATION_MESSAGE);
 
             UserReader.deleteConcertByName(searchConcertName);
 
@@ -194,42 +196,35 @@ public class AdminPanel extends JPanel implements Mediator {
         } else if (this.deleteUserButton.nowAction()) {
             var searchUserName = (String) comboUsers.getSelectedItem();
 
-            JOptionPane.showMessageDialog(this, "Are you sure to delelte " + searchUserName + " ?", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Deleted " + searchUserName + " !", "Info", JOptionPane.INFORMATION_MESSAGE);
 
             UserReader.deleteUserByName(searchUserName);
 
             this.setReloadFlag();
         } else if (this.buttonLogout.nowAction()) {
             this.mainFrame.unsetUserReader();
+
             this.mainFrame.setNextPanelName(MainFrame.LoginPanelName);
         } else if (this.addNewUserButton.nowAction()) {
             this.mainFrame.setNextPanelName(MainFrame.CreateUserPanelName);
+
             this.setReloadFlag();
         } else if (this.addNewConcertButton.nowAction()) {
             this.mainFrame.setNextPanelName(MainFrame.CreateConcertPanelName);
+
             this.setReloadFlag();
         }
 
         this.mainFrame.colleagueChanged();
     }
 
-    public void reload() {
-        if (this.getReloadFlag()) {
-            loadComboConcerts();
-            loadComboUsers();
-            resultTextArea.setText("");
-        }
-
-        this.unsetReloadFlag();
-    }
-
-    public void loadComboConcerts() {
+    private void loadComboConcerts() {
         Vector<String> allConcertsVector = new Vector<>(UserReader.getAllConcertsName());
 
         comboConcerts.setModel(new DefaultComboBoxModel<String>(allConcertsVector));
     }
 
-    public void loadComboUsers() {
+    private void loadComboUsers() {
         ArrayList<ArrayList<String>> allUsersList = UserReader.getAllUsers();
         Vector<String> allUserVector = new Vector<String>();
 

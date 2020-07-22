@@ -8,12 +8,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 @SuppressWarnings("serial")
-public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
+public class ConcertsPanel extends JPanel implements ReloadPanel, Mediator {
     public static int ALL_PANEL_WIDTH = 900;
     public static int PANEL_WIDTH = 800;
     public static int PANEL_HEIGHT = 1000;
@@ -100,7 +98,6 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
 
         this.concertsTable.setModel(modeltable);
 
-
         buttonUpdate.setMediator(this);
         buttonMyConcerts.setMediator(this);
         buttonLogout.setMediator(this);
@@ -126,12 +123,7 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
         this.mainFrame.colleagueChanged();
     }
 
-    /*Button action*/
-    public void actionPerformed(ActionEvent e) {
-
-    }
-
-    public void updateConcertsTable() {
+    private void updateConcertsTable() {
         DefaultTableModel modeltable = new DefaultTableModel(COLUMN_NAMES, 0) {
             public Class<?> getColumnClass(int columnIndex) {
                 if (columnIndex == 0) {
@@ -151,7 +143,7 @@ public class ConcertsPanel extends JPanel implements ActionListener, Mediator {
         this.concertsTable.setModel(modeltable);
     }
 
-    public void updateCheckedConcerts() {
+    private void updateCheckedConcerts() {
         ArrayList<ArrayList<String>> addedConcerts = new ArrayList<>();
         for (int i = 0; i < this.concertsTable.getRowCount(); i++) {
             if (Boolean.parseBoolean(this.concertsTable.getValueAt(i, 0).toString())) {

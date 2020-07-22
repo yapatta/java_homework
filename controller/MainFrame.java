@@ -12,8 +12,6 @@ public class MainFrame extends JFrame implements Mediator {
     public static String AdminPanelName = "Admin";
     public static String CreateConcertPanelName = "CreateConcert";
     public static String CreateUserPanelName = "CreateUser";
-    public static int WIDTH = 900;
-    public static int HEIGHT = 1000;
 
     // make several panels
     LoginPanel loginPanel;

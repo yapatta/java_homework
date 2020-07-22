@@ -9,17 +9,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class CreateUserPanel extends JPanel implements Mediator {
+public class CreateUserPanel extends JPanel implements ReloadPanel, Mediator {
     public static int ALL_PANEL_WIDTH = 400;
     public static int WIDTH = 300;
     public static int PANEL_HEIGHT = 600;
 
     private ColleagueTextField textUser;
     private ColleagueTextField textUserId;
-    private JPasswordField textPassWord;
     private ColleagueButton buttonOk;
     private ColleagueButton buttonBack;
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 
     public CreateUserPanel(MainFrame mf, String title) {
         this.mainFrame = mf;
@@ -52,8 +51,6 @@ public class CreateUserPanel extends JPanel implements Mediator {
         inputPanel.add(textUser);
         inputPanel.add(new JLabel("Member ID:"));
         inputPanel.add(textUserId);
-        //inputPanel.add(new JLabel("Pass Word:"));
-        //inputPanel.add(textPassWord);
 
         // JPanel for Buttons
         JPanel buttonsPanel = new JPanel();
@@ -70,13 +67,15 @@ public class CreateUserPanel extends JPanel implements Mediator {
         this.add(inputPanel);
         this.add(GUILibrary.getHr(WIDTH, 0));
         this.add(buttonsPanel);
-
     }
 
+    public void reload() {
+        this.textUser.setText("");
+        this.textUserId.setText("");
+    }
 
     @Override
     public void createColleagues() {
-
         textUser = new ColleagueTextField("", 10);
         textUserId = new ColleagueTextField("", 10);
 
@@ -90,7 +89,6 @@ public class CreateUserPanel extends JPanel implements Mediator {
 
         buttonOk.addActionListener(buttonOk);
         buttonBack.addActionListener(buttonBack);
-
     }
 
     @Override
@@ -117,10 +115,5 @@ public class CreateUserPanel extends JPanel implements Mediator {
         }
 
         this.mainFrame.colleagueChanged();
-    }
-
-    public void reload() {
-        this.textUser.setText("");
-        this.textUserId.setText("");
     }
 }

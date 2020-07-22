@@ -483,14 +483,4 @@ public class UserReader {
 
         return retConcerts;
     }
-
-    public static ArrayList<String> getConcertByIndex(int index) {
-        var allConcerts = getAllConcerts();
-        for (int i = 0; i < allConcerts.size(); i++) {
-            if (index == i) {
-                return allConcerts.get(i);
-            }
-        }
-        return new ArrayList<String>();
-    }
 }
